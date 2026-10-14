@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — YatraStorizz</title>
+  <meta name="description" content="YatraStorizz dashboard: trips overview, upcoming journeys, budget summary, and recent activity." />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to dashboard content</a>
+
+  <header class="dash-header">
+    <div class="dash-header__text">
+      <h1 id="dashboard-greeting">Welcome back!</h1>
+      <p class="dash-header__date"><time id="dashboard-date">Loading date…</time></p>
+    </div>
+    <div class="dash-header__actions">
+      <button type="button" class="btn btn--primary" data-action="plan-trip">Plan a New Trip</button>
+      <button type="button" class="btn btn--ghost" data-action="theme-toggle" aria-label="Toggle colour theme">◐ Theme</button>
+      <div class="avatar" aria-label="Profile">YS</div>
+    </div>
+  </header>
+
+  <div id="dashboard-status" class="status-region" role="status" aria-live="polite"></div>
+
+  <main id="main" class="dash-main">
+    <section class="dash-section" aria-labelledby="stats-heading">
+      <h2 id="stats-heading" class="section-title">Overview</h2>
+      <div id="stats-grid" class="stats-grid" aria-live="polite">
+        <p class="empty-state">Loading statistics…</p>
+      </div>
+    </section>
+
+    <div class="dash-columns">
+      <section class="dash-section" aria-labelledby="upcoming-heading">
+        <div class="section-row">
+          <h2 id="upcoming-heading" class="section-title">Upcoming trips</h2>
+          <button type="button" class="link-btn" data-action="view-all-trips">View all trips</button>
+        </div>
+        <div id="upcoming-list" class="trips-grid" aria-live="polite">
+          <p class="empty-state">Loading upcoming trips…</p>
+        </div>
+      </section>
+
+      <div class="dash-side">
+        <section class="dash-section" aria-labelledby="budget-heading">
+          <h2 id="budget-heading" class="section-title">Budget</h2>
+          <div id="budget-mount" aria-live="polite">
+            <p class="empty-state">Loading budget…</p>
+          </div>
+        </section>
+
+        <section class="dash-section" aria-labelledby="activity-heading">
+          <h2 id="activity-heading" class="section-title">Recent activity</h2>
+          <div id="activity-mount" aria-live="polite">
+            <p class="empty-state">Loading activity…</p>
+          </div>
+        </section>
+
+        <nav class="dash-section quick-actions" aria-labelledby="quick-heading">
+          <h2 id="quick-heading" class="section-title">Quick actions</h2>
+          <ul class="quick-actions__list">
+            <li><button type="button" class="btn btn--secondary" data-action="create-trip">Create a trip</button></li>
+            <li><button type="button" class="btn btn--secondary" data-action="quick-explore">Explore destinations</button></li>
+            <li><button type="button" class="btn btn--secondary" data-action="quick-saved">Open saved places</button></li>
+            <li><button type="button" class="btn btn--secondary" data-action="quick-itineraries">View all itineraries</button></li>
+          </ul>
+          <p class="quick-actions__note">Quick actions connect to app routes when available; unconnected actions show a status message.</p>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Mountains, lake and travel route illustration">
+  <rect width="1200" height="800" fill="#dcebf5"/>
+  <circle cx="950" cy="150" r="80" fill="#f5b942"/>
+  <circle cx="950" cy="150" r="110" fill="#f5b942" opacity="0.25"/>
+  <polygon points="0,520 220,180 440,520" fill="#7d9db5"/>
+  <polygon points="280,520 560,120 840,520" fill="#5b7f9c"/>
+  <polygon points="480,520 760,200 1040,520" fill="#7d9db5"/>
+  <polygon points="220,180 270,270 220,260 170,270" fill="#ffffff"/>
+  <polygon points="560,120 625,225 560,215 495,225" fill="#ffffff"/>
+  <polygon points="760,200 815,290 760,282 705,290" fill="#ffffff"/>
+  <rect y="520" width="1200" height="280" fill="#9fc3d8"/>
+  <rect y="520" width="1200" height="18" fill="#8ab4cb"/>
+  <polygon points="120,520 220,380 320,520" fill="#4c6b84" opacity="0.35"/>
+  <polygon points="640,520 760,360 880,520" fill="#4c6b84" opacity="0.35"/>
+  <g fill="#2f5d50">
+    <polygon points="60,640 90,560 120,640"/><rect x="86" y="640" width="8" height="30"/>
+    <polygon points="1020,660 1050,580 1080,660"/><rect x="1046" y="660" width="8" height="30"/>
+    <polygon points="1080,640 1105,575 1130,640"/><rect x="1101" y="640" width="8" height="26"/>
+  </g>
+  <path d="M120,220 C300,260 420,180 600,220 S900,300 1060,200" fill="none" stroke="#151515" stroke-width="6" stroke-dasharray="2 18" stroke-linecap="round"/>
+  <g transform="translate(1060,200) rotate(20)">
+    <path d="M0,0 L34,10 L0,20 L8,10 Z" fill="#151515"/>
+  </g>
+  <g>
+    <rect x="120" y="620" width="180" height="90" rx="10" fill="#ffffff"/>
+    <rect x="120" y="620" width="180" height="90" rx="10" fill="none" stroke="#151515" stroke-width="4" opacity="0.12"/>
+    <circle cx="150" cy="650" r="10" fill="#85DD74"/>
+    <rect x="168" y="643" width="110" height="12" rx="6" fill="#151515" opacity="0.75"/>
+    <rect x="168" y="662" width="80" height="10" rx="5" fill="#151515" opacity="0.3"/>
+    <rect x="140" y="684" width="140" height="10" rx="5" fill="#85DD74" opacity="0.7"/>
+  </g>
+</svg>

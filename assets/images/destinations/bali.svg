@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Tropical beach with palm trees illustration">
+  <rect width="800" height="600" fill="#bfe3ef"/>
+  <circle cx="620" cy="110" r="65" fill="#f5b942"/>
+  <g fill="#ffffff" opacity="0.9">
+    <ellipse cx="200" cy="120" rx="90" ry="26"/>
+    <ellipse cx="270" cy="140" rx="70" ry="22"/>
+  </g>
+  <rect y="380" width="800" height="220" fill="#3d8fb5"/>
+  <rect y="380" width="800" height="26" fill="#63abd0"/>
+  <path d="M0,470 Q200,440 400,470 T800,470 L800,600 L0,600 Z" fill="#ecd9a8"/>
+  <g>
+    <rect x="170" y="300" width="26" height="180" rx="10" fill="#7a5230"/>
+    <g stroke="#2f7d4f" stroke-width="20" stroke-linecap="round" fill="none">
+      <path d="M183,300 C140,270 100,265 70,280"/>
+      <path d="M183,300 C226,270 266,265 296,280"/>
+      <path d="M183,300 C160,250 150,230 150,210"/>
+      <path d="M183,300 C206,250 216,230 216,210"/>
+      <path d="M183,300 C183,260 183,240 183,220"/>
+    </g>
+    <circle cx="205" cy="315" r="14" fill="#6b4a2f"/>
+    <circle cx="165" cy="322" r="14" fill="#6b4a2f"/>
+  </g>
+  <g>
+    <rect x="540" y="240" width="30" height="120" fill="#8a6a45"/>
+    <polygon points="520,240 590,240 555,180" fill="#a33f3f"/>
+    <rect x="540" y="270" width="30" height="14" fill="#5f1d1d"/>
+  </g>
+  <g fill="#85DD74">
+    <path d="M330,420 q20,-14 40,0 q20,14 40,0" stroke-width="6" fill="none"/>
+    <path d="M470,445 q20,-14 40,0 q20,14 40,0" stroke-width="6" fill="none"/>
+  </g>
+</svg>

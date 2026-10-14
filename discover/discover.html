@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discover Destinations — YatraStorizz</title>
+  <meta name="description" content="YatraStorizz Discover: search destinations, filter by category, budget and season, and save favorites." />
+  <link rel="stylesheet" href="css/discover.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to destinations</a>
+
+  <nav class="top-nav" aria-label="Primary">
+    <a class="top-nav__brand" href="../dashboard/dashboard.html">YatraStorizz</a>
+    <div class="top-nav__links">
+      <a href="../dashboard/dashboard.html">Dashboard</a>
+      <a href="discover.html" aria-current="page">Discover</a>
+      <button type="button" class="btn btn--ghost btn--small" data-action="theme-toggle" aria-label="Toggle colour theme">◐ Theme</button>
+    </div>
+  </nav>
+
+  <header class="discover-hero">
+    <div class="discover-hero__text">
+      <h1>Discover Your Next Destination</h1>
+      <p>Search mountains, beaches, cities, and cultural escapes — filter by budget and season, then save the ones you love.</p>
+    </div>
+    <div id="search-mount" class="discover-hero__search">
+      <p class="empty-state">Loading search…</p>
+    </div>
+    <div class="discover-hero__meta">
+      <p id="result-count" role="status" aria-live="polite">Loading destinations…</p>
+      <div class="discover-hero__actions">
+        <button type="button" id="saved-toggle" class="btn btn--secondary btn--small" data-action="toggle-saved" aria-pressed="false">☆ Saved (0)</button>
+        <button type="button" id="filters-clear-inline" class="link-btn" data-action="reset-search" hidden>Clear search &amp; filters</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="discover-status" class="status-region" role="status" aria-live="polite"></div>
+
+  <main id="main" class="discover-main">
+    <section aria-label="Featured destination">
+      <div id="featured-mount"></div>
+    </section>
+
+    <div class="discover-layout">
+      <div id="filter-mount" class="discover-filters">
+        <p class="empty-state">Loading filters…</p>
+      </div>
+      <section aria-labelledby="results-heading" class="discover-results">
+        <h2 id="results-heading" class="visually-hidden">Matching destinations</h2>
+        <div id="dest-grid" class="dest-grid" aria-live="polite">
+          <p class="empty-state">Loading destinations…</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="js/destinations.js"></script>
+</body>
+</html>

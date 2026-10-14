@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trip Itinerary — YatraStorizz</title>
+  <meta name="description" content="YatraStorizz itinerary planner: day-by-day activities, schedules, costs, and reordering." />
+  <link rel="stylesheet" href="css/itinerary.css" />
+</head>
+<body>
+  <a class="skip-link" href="#itinerary-main">Skip to itinerary</a>
+
+  <nav class="top-nav" aria-label="Primary">
+    <a class="top-nav__brand" href="../dashboard/dashboard.html">YatraStorizz</a>
+    <div class="top-nav__links">
+      <a href="../dashboard/dashboard.html">Dashboard</a>
+      <a href="../discover/discover.html">Discover</a>
+      <a href="../trips/trips.html">Trips</a>
+      <a href="../budget/budget.html">Budget</a>
+      <button type="button" class="btn btn--ghost btn--small" data-action="theme-toggle" aria-label="Toggle colour theme">◐ Theme</button>
+    </div>
+  </nav>
+
+  <div class="itinerary-bar">
+    <a class="btn btn--ghost btn--small" href="../trips/trips.html">← Back to My Trips</a>
+    <button type="button" id="add-activity-btn" class="btn btn--primary" data-action="add-activity" hidden>Add Activity</button>
+  </div>
+
+  <div id="itinerary-status" class="status-region" role="status" aria-live="polite"></div>
+
+  <main id="itinerary-main" class="itinerary-main">
+    <section aria-label="Trip summary">
+      <div id="trip-header-mount">
+        <p class="empty-state">Loading trip…</p>
+      </div>
+    </section>
+
+    <section aria-label="Itinerary days">
+      <div id="day-tabs-mount">
+        <p class="empty-state">Loading days…</p>
+      </div>
+    </section>
+
+    <section aria-label="Selected day">
+      <div id="day-summary" class="day-summary"></div>
+      <div id="timeline-mount">
+        <p class="empty-state">Loading timeline…</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/itinerary.js"></script>
+</body>
+</html>

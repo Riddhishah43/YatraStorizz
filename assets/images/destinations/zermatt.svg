@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Snowy Matterhorn peak with chalets illustration">
+  <rect width="800" height="600" fill="#d7e7f2"/>
+  <circle cx="140" cy="100" r="55" fill="#f5c86e"/>
+  <polygon points="120,480 400,80 680,480" fill="#8fa8bd"/>
+  <polygon points="400,80 470,200 400,185 330,200" fill="#ffffff"/>
+  <polygon points="300,480 470,230 640,480" fill="#6e8ba3"/>
+  <polygon points="470,230 515,300 470,292 425,300" fill="#ffffff"/>
+  <rect y="480" width="800" height="120" fill="#eef4f8"/>
+  <g>
+    <rect x="120" y="470" width="110" height="70" fill="#7a5230"/>
+    <polygon points="105,470 175,420 245,470" fill="#5f1d1d"/>
+    <rect x="155" y="495" width="40" height="45" fill="#3d2b1a"/>
+  </g>
+  <g>
+    <rect x="570" y="470" width="110" height="70" fill="#7a5230"/>
+    <polygon points="555,470 625,420 695,470" fill="#5f1d1d"/>
+    <rect x="605" y="495" width="40" height="45" fill="#3d2b1a"/>
+  </g>
+  <g fill="#2f5d50">
+    <polygon points="300,540 320,490 340,540"/><polygon points="450,540 470,490 490,540"/>
+  </g>
+  <g fill="#ffffff"><circle cx="250" cy="150" r="7"/><circle cx="350" cy="90" r="6"/><circle cx="560" cy="140" r="7"/><circle cx="650" cy="220" r="6"/><circle cx="180" cy="250" r="6"/></g>
+</svg>

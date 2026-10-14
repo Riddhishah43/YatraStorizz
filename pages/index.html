@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YatraStorizz — Plan Your Next Adventure</title>
+  <meta name="description" content="YatraStorizz helps you discover destinations, organize multi-day trips, build day-by-day itineraries, and track travel budgets — all in one place." />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/landing.css" />
+  <script>
+    // Pre-paint theme only (no business logic): avoids a light/dark flash.
+    try {
+      var saved = localStorage.getItem("yatrastorizz.theme");
+      var theme = saved === "light" || saved === "dark" ? saved :
+        (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = theme;
+    } catch (e) { /* system default (light) applies */ }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#home">Skip to content</a>
+  <div id="nav-mount">
+    <header class="site-nav"><div class="site-nav__inner"><span>Loading navigation…</span></div></header>
+  </div>
+
+  <main>
+    <section id="home" class="hero" aria-labelledby="hero-heading">
+      <div class="hero__inner">
+        <div class="hero__copy">
+          <p class="eyebrow">Smart travel planning</p>
+          <h1 id="hero-heading">Your Next Adventure, Beautifully Planned.</h1>
+          <p class="hero__sub">Discover inspiring destinations, organize every stop, and keep your travel plans and budget together in one place.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary btn--large" href="../trips/trips.html">Plan Your Trip</a>
+            <a class="btn btn--secondary btn--large" href="#destinations">Explore Destinations</a>
+          </div>
+          <p class="hero__hint" data-hero-trips></p>
+        </div>
+        <div class="hero__visual">
+          <img src="../assets/images/hero/hero-travel.svg" alt="Illustration of mountains, a lake, and a travel route" width="1200" height="800" fetchpriority="high" />
+          <div class="itinerary-preview" aria-label="Example trip summary">
+            <p class="itinerary-preview__title">Rajasthan Getaway</p>
+            <p class="itinerary-preview__meta">Day 2 of 6 · Jaipur → Udaipur</p>
+            <p class="itinerary-preview__meta">₹6,500 of ₹18,000 spent</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="destinations" class="section" aria-labelledby="destinations-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Where to next?</p>
+        <h2 id="destinations-heading">Destinations worth the journey</h2>
+        <p class="section__sub">A curated starting set — open any of them in the Discover module to filter, save, and plan around them.</p>
+        <div id="showcase-grid" class="showcase-grid">
+          <p class="empty-state">Loading destinations…</p>
+        </div>
+        <div class="section__cta">
+          <a class="btn btn--secondary" href="../discover/discover.html">Explore All Destinations</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section section--tinted" aria-labelledby="features-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Why YatraStorizz?</p>
+        <h2 id="features-heading">Everything your trip needs, in one place</h2>
+        <p class="section__sub">Six capabilities that turn loose ideas into organized, budgeted, day-by-day plans.</p>
+        <div id="features-grid" class="features-grid">
+          <p class="empty-state">Loading features…</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section" aria-labelledby="how-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Simple by design</p>
+        <h2 id="how-heading">From idea to itinerary in four steps</h2>
+        <div id="steps-list">
+          <p class="empty-state">Loading steps…</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials" class="section section--tinted" aria-labelledby="testimonials-heading">
+      <div class="section__inner">
+        <p class="eyebrow">Who it's for</p>
+        <h2 id="testimonials-heading" data-testimonials-heading>Designed for Every Kind of Trip</h2>
+        <p class="section__sub" data-testimonials-sub>Sample scenarios below illustrate who YatraStorizz is built for — not customer reviews.</p>
+        <div id="testimonials-mount">
+          <p class="empty-state">Loading…</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="newsletter" class="section" aria-labelledby="newsletter-heading">
+      <div class="section__inner section__inner--narrow">
+        <p class="eyebrow">Stay in the loop</p>
+        <h2 id="newsletter-heading">Get trip ideas in your inbox</h2>
+        <p class="section__sub">One short email when new destinations land. Demo signup below — stored only on this device, nothing is sent anywhere.</p>
+        <form id="newsletter-form" class="newsletter-form" novalidate>
+          <label class="visually-hidden" for="newsletter-email">Email address</label>
+          <input type="email" id="newsletter-email" name="email" class="control" placeholder="you@example.com" autocomplete="email" required aria-describedby="newsletter-error" />
+          <button type="submit" class="btn btn--primary">Subscribe</button>
+          <p id="newsletter-error" class="field__error" role="alert" hidden></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-mount">
+    <footer class="site-footer"><p>Loading footer…</p></footer>
+  </div>
+
+  <script type="module" src="../js/landing.js"></script>
+</body>
+</html>

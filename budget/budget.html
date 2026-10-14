@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Travel Budget — YatraStorizz</title>
+  <meta name="description" content="YatraStorizz budget tracker: set trip budgets, record expenses, and monitor spending by category." />
+  <link rel="stylesheet" href="css/budget.css" />
+</head>
+<body>
+  <a class="skip-link" href="#budget-main">Skip to budget content</a>
+
+  <nav class="top-nav" aria-label="Primary">
+    <a class="top-nav__brand" href="../dashboard/dashboard.html">YatraStorizz</a>
+    <div class="top-nav__links">
+      <a href="../dashboard/dashboard.html">Dashboard</a>
+      <a href="../discover/discover.html">Discover</a>
+      <a href="../trips/trips.html">Trips</a>
+      <a href="../itinerary/trip-details.html">Itinerary</a>
+      <a href="budget.html" aria-current="page">Budget</a>
+      <button type="button" class="btn btn--ghost btn--small" data-action="theme-toggle" aria-label="Toggle colour theme">◐ Theme</button>
+    </div>
+  </nav>
+
+  <header class="budget-hero">
+    <div>
+      <h1>Travel Budget</h1>
+      <div id="trip-context-mount" aria-live="polite"></div>
+    </div>
+    <div class="trip-pick">
+      <label class="control-label" for="trip-select">Trip</label>
+      <select id="trip-select" class="control"></select>
+    </div>
+  </header>
+
+  <div id="budget-status" class="status-region" role="status" aria-live="polite"></div>
+
+  <main id="budget-main" class="budget-main">
+    <section class="budget-grid" aria-label="Budget overview">
+      <div class="budget-setter">
+        <h2 class="section-title">Planned budget</h2>
+        <div class="budget-setter__row">
+          <label class="visually-hidden" for="budget-amount">Planned budget amount</label>
+          <input type="number" id="budget-amount" class="control" min="0" step="any" placeholder="e.g. 25000" />
+          <span id="budget-currency-tag" class="currency-tag" aria-label="Currency">INR</span>
+          <button type="button" class="btn btn--primary btn--small" data-action="save-budget">Save budget</button>
+        </div>
+        <p id="budget-error" class="field__error" role="alert" hidden></p>
+      </div>
+      <div id="budget-progress-mount" aria-live="polite"></div>
+      <div id="spending-summary-mount" aria-live="polite"></div>
+      <div id="category-breakdown-mount" aria-live="polite"></div>
+    </section>
+
+    <div id="estimate-mount" aria-live="polite"></div>
+
+    <section aria-labelledby="expenses-heading" class="expenses-section">
+      <div class="section-row">
+        <h2 id="expenses-heading" class="section-title">Expenses</h2>
+        <button type="button" class="btn btn--primary btn--small" data-action="add-expense">Add Expense</button>
+      </div>
+
+      <div class="expense-filters">
+        <div class="expense-filters__search">
+          <label class="visually-hidden" for="expense-search">Search expenses</label>
+          <input type="search" id="expense-search" class="control" placeholder="Search description or notes…" autocomplete="off" />
+        </div>
+        <label class="control-label">Category
+          <select id="filter-category" class="control"></select>
+        </label>
+        <label class="control-label">From
+          <input type="date" id="filter-from" class="control" />
+        </label>
+        <label class="control-label">To
+          <input type="date" id="filter-to" class="control" />
+        </label>
+        <label class="control-label">Min ₹
+          <input type="number" id="filter-min" class="control" min="0" step="any" />
+        </label>
+        <label class="control-label">Max ₹
+          <input type="number" id="filter-max" class="control" min="0" step="any" />
+        </label>
+        <label class="control-label">Sort
+          <select id="filter-sort" class="control">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="highest">Highest amount</option>
+            <option value="lowest">Lowest amount</option>
+          </select>
+        </label>
+        <p id="expense-count" class="expense-count" role="status" aria-live="polite"></p>
+      </div>
+
+      <div id="expense-list-mount" aria-live="polite">
+        <p class="empty-state">Loading expenses…</p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="js/budget.js"></script>
+</body>
+</html>

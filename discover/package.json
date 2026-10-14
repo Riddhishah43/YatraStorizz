@@ -1,0 +1,13 @@
+{
+  "name": "yatrastorizz-discover",
+  "version": "1.0.0",
+  "description": "Discover Destinations module for YatraStorizz (vanilla ES modules + Vitest)",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Pagoda and cherry blossom illustration">
+  <rect width="800" height="600" fill="#f3e8e4"/>
+  <circle cx="640" cy="110" r="60" fill="#e8a0a8"/>
+  <rect y="460" width="800" height="140" fill="#b9c9a8"/>
+  <g>
+    <rect x="330" y="180" width="140" height="280" fill="#8f2d2d"/>
+    <polygon points="300,180 400,110 500,180" fill="#5f1d1d"/>
+    <rect x="310" y="160" width="180" height="22" rx="4" fill="#5f1d1d"/>
+    <rect x="295" y="250" width="210" height="22" rx="4" fill="#5f1d1d"/>
+    <rect x="280" y="340" width="240" height="22" rx="4" fill="#5f1d1d"/>
+    <rect x="385" y="400" width="30" height="60" fill="#3d1414"/>
+    <rect x="345" y="300" width="26" height="26" fill="#f3e8e4"/>
+    <rect x="429" y="300" width="26" height="26" fill="#f3e8e4"/>
+    <rect x="345" y="210" width="26" height="26" fill="#f3e8e4"/>
+    <rect x="429" y="210" width="26" height="26" fill="#f3e8e4"/>
+  </g>
+  <g>
+    <rect x="120" y="380" width="26" height="90" fill="#6b4a2f"/>
+    <circle cx="133" cy="330" r="70" fill="#e8a0b4"/>
+    <circle cx="90" cy="360" r="45" fill="#f0bcc8"/>
+    <circle cx="178" cy="360" r="45" fill="#f0bcc8"/>
+    <rect x="620" y="400" width="22" height="70" fill="#6b4a2f"/>
+    <circle cx="631" cy="360" r="55" fill="#e8a0b4"/>
+    <circle cx="595" cy="385" r="35" fill="#f0bcc8"/>
+  </g>
+</svg>

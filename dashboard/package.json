@@ -1,0 +1,13 @@
+{
+  "name": "yatrastorizz-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard module for YatraStorizz travel planning app (vanilla ES modules + Vitest)",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Mosque skyline over the strait illustration">
+  <rect width="800" height="600" fill="#cfdff0"/>
+  <circle cx="180" cy="120" r="55" fill="#f5c86e"/>
+  <g fill="#3d4b63">
+    <path d="M180,180 q14,-12 28,0 M240,150 q14,-12 28,0 M540,170 q14,-12 28,0" stroke-width="6" fill="none"/>
+  </g>
+  <rect y="400" width="800" height="200" fill="#5f8fb5"/>
+  <rect y="400" width="800" height="20" fill="#7fadd0"/>
+  <g>
+    <rect x="240" y="300" width="320" height="110" fill="#8a7f72"/>
+    <ellipse cx="400" cy="300" rx="110" ry="70" fill="#6e655a"/>
+    <rect x="394" y="180" width="12" height="70" fill="#6e655a"/>
+    <circle cx="400" cy="175" r="8" fill="#6e655a"/>
+    <ellipse cx="280" cy="305" rx="45" ry="32" fill="#7d7468"/>
+    <ellipse cx="520" cy="305" rx="45" ry="32" fill="#7d7468"/>
+    <rect x="180" y="180" width="16" height="230" fill="#8a7f72"/>
+    <polygon points="180,180 188,150 196,180" fill="#8a7f72"/>
+    <rect x="604" y="180" width="16" height="230" fill="#8a7f72"/>
+    <polygon points="604,180 612,150 620,180" fill="#8a7f72"/>
+    <rect x="176" y="230" width="24" height="10" fill="#6e655a"/>
+    <rect x="600" y="230" width="24" height="10" fill="#6e655a"/>
+  </g>
+  <g fill="#ffffff" opacity="0.85">
+    <rect x="300" y="430" width="70" height="14" rx="7"/>
+    <rect x="450" y="455" width="90" height="14" rx="7"/>
+  </g>
+  <rect y="560" width="800" height="40" fill="#4c6b84"/>
+</svg>
