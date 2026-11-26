@@ -1,8 +1,11 @@
 /**
- * auth-modal.js — Sign In, First-Time Registration, and integrated Demo Account modal.
- * Pure DOM, accessible <dialog>, zero-framework, zero-XSS.
- * Offers Demo Account options directly within Sign In and Sign Up flows so
- * users can test the app before signing in or creating an account.
+ * auth-modal.js — Clean 3-tab Authentication Modal.
+ * Layout:
+ * - "Get Started" opens the 3 tabs:
+ *    1. "Login" (active by default): Email Address + Password + Login button.
+ *    2. "Sign-In": Full Name + Email Address + Password + Home City (optional) + Sign-In button.
+ *    3. "Try Demo Account": Single-click button that logs in immediately as demo user.
+ * - Navbar "Sign In" opens directly with only the Sign-In credentials (tabs hidden).
  */
 import { el } from "../utils/dom-utils.js";
 import { authService } from "../services/auth-service.js";
@@ -38,35 +41,41 @@ export function createAuthModal({ onAuthenticated = () => {} } = {}) {
     }
   };
 
-  // Header
+  // Header: Brand & Close Button
   const header = el("div", "auth-dialog__header");
   const brand = el("span", "auth-dialog__brand", "✈ YaatraStorizz");
   const closeBtn = el("button", "btn btn--ghost btn--small auth-dialog__close", "✕");
   closeBtn.type = "button";
   closeBtn.setAttribute("aria-label", "Close authentication dialog");
   closeBtn.addEventListener("click", () => safeClose());
-
   header.appendChild(brand);
   header.appendChild(closeBtn);
   card.appendChild(header);
 
-  const title = el("h2", "auth-dialog__title", "Welcome to YaatraStorizz");
+  // Dynamic Title & Subtitle based on active tab (defaults to Login)
+  const title = el("h2", "auth-dialog__title", "Login");
   title.id = "auth-dialog-title";
-  const sub = el("p", "auth-dialog__sub", "Sign in to access your journeys, create a new account, or test the app first with our pre-loaded Demo Account.");
+  const sub = el("p", "auth-dialog__sub", "Welcome back! Enter your email and password to log in.");
   card.appendChild(title);
   card.appendChild(sub);
 
-  // Tabs for Sign In, Sign Up, and Demo Account
+  // Exactly 3 Tabs: Login, Sign-In, and Try Demo Account button
   const tabsWrap = el("div", "auth-tabs");
-  const tabSignIn = el("button", "auth-tab is-active", "Sign In");
-  tabSignIn.type = "button";
-  const tabSignUp = el("button", "auth-tab", "New User? Create Account");
-  tabSignUp.type = "button";
-  const tabDemo = el("button", "auth-tab auth-tab--demo", "🚀 Try Demo Account");
-  tabDemo.type = "button";
 
+  const tabLogin = el("button", "auth-tab is-active", "Login");
+  tabLogin.type = "button";
+  tabLogin.setAttribute("aria-label", "Login for existing accounts");
+
+  const tabSignIn = el("button", "auth-tab", "Sign-In");
+  tabSignIn.type = "button";
+  tabSignIn.setAttribute("aria-label", "Sign-In for creating a new account");
+
+  const tabDemo = el("button", "auth-tab auth-tab--demo auth-demo-box__btn", "Try Demo Account");
+  tabDemo.type = "button";
+  tabDemo.setAttribute("aria-label", "Try Demo Account - Log in immediately as demo user");
+
+  tabsWrap.appendChild(tabLogin);
   tabsWrap.appendChild(tabSignIn);
-  tabsWrap.appendChild(tabSignUp);
   tabsWrap.appendChild(tabDemo);
   card.appendChild(tabsWrap);
 
@@ -75,70 +84,63 @@ export function createAuthModal({ onAuthenticated = () => {} } = {}) {
   errorAlert.setAttribute("role", "alert");
   card.appendChild(errorAlert);
 
-  // Form Container
+  // Forms Container
   const formWrap = el("div", "auth-forms");
 
-  // ==========================================
-  // --- 1. Sign In Form (With Demo Option) ---
-  // ==========================================
-  const signInForm = document.createElement("form");
-  signInForm.className = "form-grid auth-form";
-  signInForm.noValidate = true;
+  // ==============================================================
+  // --- TAB 1: LOGIN FORM (Users who already have an account) ---
+  // Fields: Email Address, Password
+  // ==============================================================
+  const loginForm = document.createElement("form");
+  loginForm.className = "form-grid auth-form";
+  loginForm.noValidate = true;
+  loginForm.hidden = false;
+  loginForm.style.display = "flex";
 
-  const inEmailField = el("div", "field");
-  const inEmailLabel = el("label", "field__label", "Email Address");
-  inEmailLabel.setAttribute("for", "auth-in-email");
-  const inEmailInput = document.createElement("input");
-  inEmailInput.type = "email";
-  inEmailInput.id = "auth-in-email";
-  inEmailInput.className = "field__control";
-  inEmailInput.placeholder = "you@example.com";
-  inEmailInput.required = true;
-  inEmailField.appendChild(inEmailLabel);
-  inEmailField.appendChild(inEmailInput);
-  signInForm.appendChild(inEmailField);
+  const loginEmailField = el("div", "field");
+  const loginEmailLabel = el("label", "field__label", "Email Address");
+  loginEmailLabel.setAttribute("for", "auth-login-email");
+  const loginEmailInput = document.createElement("input");
+  loginEmailInput.type = "email";
+  loginEmailInput.id = "auth-login-email";
+  loginEmailInput.className = "field__control";
+  loginEmailInput.placeholder = "name@example.com";
+  loginEmailInput.autocomplete = "email";
+  loginEmailInput.required = true;
+  loginEmailField.appendChild(loginEmailLabel);
+  loginEmailField.appendChild(loginEmailInput);
+  loginForm.appendChild(loginEmailField);
 
-  const inPassField = el("div", "field");
-  const inPassLabel = el("label", "field__label", "Password");
-  inPassLabel.setAttribute("for", "auth-in-password");
-  const inPassInput = document.createElement("input");
-  inPassInput.type = "password";
-  inPassInput.id = "auth-in-password";
-  inPassInput.className = "field__control";
-  inPassInput.placeholder = "••••••••";
-  inPassInput.required = true;
-  inPassField.appendChild(inPassLabel);
-  inPassField.appendChild(inPassInput);
-  signInForm.appendChild(inPassField);
+  const loginPassField = el("div", "field");
+  const loginPassLabel = el("label", "field__label", "Password");
+  loginPassLabel.setAttribute("for", "auth-login-password");
+  const loginPassInput = document.createElement("input");
+  loginPassInput.type = "password";
+  loginPassInput.id = "auth-login-password";
+  loginPassInput.className = "field__control";
+  loginPassInput.placeholder = "Enter your password";
+  loginPassInput.autocomplete = "current-password";
+  loginPassInput.required = true;
+  loginPassField.appendChild(loginPassLabel);
+  loginPassField.appendChild(loginPassInput);
+  loginForm.appendChild(loginPassField);
 
-  const inSubmitBtn = el("button", "btn btn--primary btn--block", "Sign In →");
-  inSubmitBtn.type = "submit";
-  signInForm.appendChild(inSubmitBtn);
+  const loginSubmitBtn = el("button", "btn btn--primary btn--block", "Login");
+  loginSubmitBtn.type = "submit";
+  loginForm.appendChild(loginSubmitBtn);
 
-  // Demo Option inside Sign In
-  const inDivider = el("div", "auth-divider");
-  const inDividerSpan = el("span", null, "or explore before signing in");
-  inDivider.appendChild(inDividerSpan);
-  signInForm.appendChild(inDivider);
+  // Switcher to Sign-In
+  const loginSwitch = el("p", "auth-switch", "Don't have an account?");
+  const loginSwitchBtn = el("button", "auth-switch__btn", "Sign-In");
+  loginSwitchBtn.type = "button";
+  loginSwitchBtn.addEventListener("click", () => showSignInTab({ hideTabs: false }));
+  loginSwitch.appendChild(loginSwitchBtn);
+  loginForm.appendChild(loginSwitch);
 
-  const inDemoOption = el("div", "auth-demo-option");
-  const inDemoBtn = el("button", "btn btn--secondary auth-demo-box__btn", "🚀 Continue with Demo Account (Asha Sharma)");
-  inDemoBtn.type = "button";
-  inDemoBtn.addEventListener("click", triggerDemoLogin);
-
-  const inDemoCaption = el(
-    "p",
-    "auth-demo-caption",
-    "Instant access with pre-loaded trips, itineraries, and budgets — no password required."
-  );
-  inDemoOption.appendChild(inDemoBtn);
-  inDemoOption.appendChild(inDemoCaption);
-  signInForm.appendChild(inDemoOption);
-
-  signInForm.addEventListener("submit", (e) => {
+  loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
     errorAlert.hidden = true;
-    const res = authService.signIn(inEmailInput.value, inPassInput.value);
+    const res = authService.signIn(loginEmailInput.value, loginPassInput.value);
     if (!res.ok) {
       errorAlert.textContent = res.error;
       errorAlert.hidden = false;
@@ -148,97 +150,91 @@ export function createAuthModal({ onAuthenticated = () => {} } = {}) {
     onAuthenticated(res.user);
   });
 
-  // ============================================
-  // --- 2. Sign Up Form (With Demo Option) ---
-  // ============================================
-  const signUpForm = document.createElement("form");
-  signUpForm.className = "form-grid auth-form";
-  signUpForm.noValidate = true;
-  signUpForm.hidden = true;
+  // ==========================================================
+  // --- TAB 2: SIGN-IN FORM (Users creating a new account) ---
+  // Fields: Full Name, Email Address, Password, Home City (optional)
+  // ==========================================================
+  const signInForm = document.createElement("form");
+  signInForm.className = "form-grid auth-form";
+  signInForm.noValidate = true;
+  signInForm.hidden = true;
+  signInForm.style.display = "none";
 
-  const upNameField = el("div", "field");
-  const upNameLabel = el("label", "field__label", "Full Name *");
-  upNameLabel.setAttribute("for", "auth-up-name");
-  const upNameInput = document.createElement("input");
-  upNameInput.type = "text";
-  upNameInput.id = "auth-up-name";
-  upNameInput.className = "field__control";
-  upNameInput.placeholder = "e.g. Riddhi Sen";
-  upNameInput.required = true;
-  upNameField.appendChild(upNameLabel);
-  upNameField.appendChild(upNameInput);
-  signUpForm.appendChild(upNameField);
+  const signinNameField = el("div", "field");
+  const signinNameLabel = el("label", "field__label", "Full Name");
+  signinNameLabel.setAttribute("for", "auth-signin-name");
+  const signinNameInput = document.createElement("input");
+  signinNameInput.type = "text";
+  signinNameInput.id = "auth-signin-name";
+  signinNameInput.className = "field__control";
+  signinNameInput.placeholder = "e.g. Riddhi Sen";
+  signinNameInput.autocomplete = "name";
+  signinNameInput.required = true;
+  signinNameField.appendChild(signinNameLabel);
+  signinNameField.appendChild(signinNameInput);
+  signInForm.appendChild(signinNameField);
 
-  const upEmailField = el("div", "field");
-  const upEmailLabel = el("label", "field__label", "Email Address *");
-  upEmailLabel.setAttribute("for", "auth-up-email");
-  const upEmailInput = document.createElement("input");
-  upEmailInput.type = "email";
-  upEmailInput.id = "auth-up-email";
-  upEmailInput.className = "field__control";
-  upEmailInput.placeholder = "you@example.com";
-  upEmailInput.required = true;
-  upEmailField.appendChild(upEmailLabel);
-  upEmailField.appendChild(upEmailInput);
-  signUpForm.appendChild(upEmailField);
+  const signinEmailField = el("div", "field");
+  const signinEmailLabel = el("label", "field__label", "Email Address");
+  signinEmailLabel.setAttribute("for", "auth-signin-email");
+  const signinEmailInput = document.createElement("input");
+  signinEmailInput.type = "email";
+  signinEmailInput.id = "auth-signin-email";
+  signinEmailInput.className = "field__control";
+  signinEmailInput.placeholder = "name@example.com";
+  signinEmailInput.autocomplete = "email";
+  signinEmailInput.required = true;
+  signinEmailField.appendChild(signinEmailLabel);
+  signinEmailField.appendChild(signinEmailInput);
+  signInForm.appendChild(signinEmailField);
 
-  const upCityField = el("div", "field");
-  const upCityLabel = el("label", "field__label", "Home City (optional)");
-  upCityLabel.setAttribute("for", "auth-up-city");
-  const upCityInput = document.createElement("input");
-  upCityInput.type = "text";
-  upCityInput.id = "auth-up-city";
-  upCityInput.className = "field__control";
-  upCityInput.placeholder = "e.g. Mumbai, India";
-  upCityField.appendChild(upCityLabel);
-  upCityField.appendChild(upCityInput);
-  signUpForm.appendChild(upCityField);
+  const signinPassField = el("div", "field");
+  const signinPassLabel = el("label", "field__label", "Password");
+  signinPassLabel.setAttribute("for", "auth-signin-password");
+  const signinPassInput = document.createElement("input");
+  signinPassInput.type = "password";
+  signinPassInput.id = "auth-signin-password";
+  signinPassInput.className = "field__control";
+  signinPassInput.placeholder = "At least 4 characters";
+  signinPassInput.autocomplete = "new-password";
+  signinPassInput.required = true;
+  signinPassField.appendChild(signinPassLabel);
+  signinPassField.appendChild(signinPassInput);
+  signInForm.appendChild(signinPassField);
 
-  const upPassField = el("div", "field");
-  const upPassLabel = el("label", "field__label", "Create Password *");
-  upPassLabel.setAttribute("for", "auth-up-password");
-  const upPassInput = document.createElement("input");
-  upPassInput.type = "password";
-  upPassInput.id = "auth-up-password";
-  upPassInput.className = "field__control";
-  upPassInput.placeholder = "At least 4 characters";
-  upPassInput.required = true;
-  upPassField.appendChild(upPassLabel);
-  upPassField.appendChild(upPassInput);
-  signUpForm.appendChild(upPassField);
+  const signinCityField = el("div", "field");
+  const signinCityLabel = el("label", "field__label", "Home City (optional)");
+  signinCityLabel.setAttribute("for", "auth-signin-city");
+  const signinCityInput = document.createElement("input");
+  signinCityInput.type = "text";
+  signinCityInput.id = "auth-signin-city";
+  signinCityInput.className = "field__control";
+  signinCityInput.placeholder = "e.g. Mumbai, India";
+  signinCityInput.autocomplete = "address-level2";
+  signinCityField.appendChild(signinCityLabel);
+  signinCityField.appendChild(signinCityInput);
+  signInForm.appendChild(signinCityField);
 
-  const upSubmitBtn = el("button", "btn btn--primary btn--block", "Create Account & Get Started →");
-  upSubmitBtn.type = "submit";
-  signUpForm.appendChild(upSubmitBtn);
+  const signinSubmitBtn = el("button", "btn btn--primary btn--block", "Sign-In (Create Account)");
+  signinSubmitBtn.type = "submit";
+  signInForm.appendChild(signinSubmitBtn);
 
-  // Demo Option inside Sign Up
-  const upDivider = el("div", "auth-divider");
-  const upDividerSpan = el("span", null, "or test without creating an account");
-  upDivider.appendChild(upDividerSpan);
-  signUpForm.appendChild(upDivider);
+  // Switcher to Login
+  const signinSwitch = el("p", "auth-switch", "Already have an account?");
+  const signinSwitchBtn = el("button", "auth-switch__btn", "Login");
+  signinSwitchBtn.type = "button";
+  signinSwitchBtn.addEventListener("click", () => showLoginTab({ hideTabs: false }));
+  signinSwitch.appendChild(signinSwitchBtn);
+  signInForm.appendChild(signinSwitch);
 
-  const upDemoOption = el("div", "auth-demo-option");
-  const upDemoBtn = el("button", "btn btn--secondary auth-demo-box__btn", "🚀 Try Demo Account Before Registering");
-  upDemoBtn.type = "button";
-  upDemoBtn.addEventListener("click", triggerDemoLogin);
-
-  const upDemoCaption = el(
-    "p",
-    "auth-demo-caption",
-    "Want to see how YaatraStorizz works first? Test with demo trips, budgets, and reviews."
-  );
-  upDemoOption.appendChild(upDemoBtn);
-  upDemoOption.appendChild(upDemoCaption);
-  signUpForm.appendChild(upDemoOption);
-
-  signUpForm.addEventListener("submit", (e) => {
+  signInForm.addEventListener("submit", (e) => {
     e.preventDefault();
     errorAlert.hidden = true;
     const res = authService.signUp({
-      name: upNameInput.value,
-      email: upEmailInput.value,
-      password: upPassInput.value,
-      homeCity: upCityInput.value,
+      name: signinNameInput.value,
+      email: signinEmailInput.value,
+      password: signinPassInput.value,
+      homeCity: signinCityInput.value,
     });
     if (!res.ok) {
       errorAlert.textContent = res.error;
@@ -249,73 +245,72 @@ export function createAuthModal({ onAuthenticated = () => {} } = {}) {
     onAuthenticated(res.user);
   });
 
-  // ============================================
-  // --- 3. Dedicated Demo Account Tab View ---
-  // ============================================
-  const demoView = el("div", "auth-demo-view");
-  demoView.hidden = true;
-
-  const demoBadge = el("span", "auth-demo-view__badge", "⚡ INSTANT EVALUATION");
-  const demoHead = el("h3", "auth-demo-view__title", "Explore as Asha Sharma");
-  const demoDesc = el(
-    "p",
-    "auth-demo-view__desc",
-    "Test all capabilities instantly before creating your own account. Pre-loaded with realistic journeys, itineraries, expenses, and reviews."
-  );
-
-  const featureList = el("ul", "auth-demo-features");
-  const features = [
-    "✈ Pre-loaded trips: Rajasthan Getaway, Kerala Backwaters & Himachal Trek",
-    "📅 Interactive day-by-day itineraries with timeline re-ordering",
-    "💰 Category budget breakdown and travel expense tracking",
-    "⭐ Community travel ratings and Google-style review submission",
-    "⚙ Complete profile and multi-currency preferences (INR, USD, EUR, GBP)",
-  ];
-  features.forEach((f) => {
-    const li = el("li", null, f);
-    featureList.appendChild(li);
-  });
-
-  const launchDemoBtn = el("button", "btn btn--primary btn--large auth-demo-box__btn", "🚀 Launch Demo Experience");
-  launchDemoBtn.type = "button";
-  launchDemoBtn.addEventListener("click", triggerDemoLogin);
-
-  demoView.appendChild(demoBadge);
-  demoView.appendChild(demoHead);
-  demoView.appendChild(demoDesc);
-  demoView.appendChild(featureList);
-  demoView.appendChild(launchDemoBtn);
-
-  // Tab switching logic
-  const activateTab = (activeTab, activePanel) => {
-    [tabSignIn, tabSignUp, tabDemo].forEach((t) => t.classList.remove("is-active"));
-    [signInForm, signUpForm, demoView].forEach((p) => (p.hidden = true));
-    activeTab.classList.add("is-active");
-    activePanel.hidden = false;
+  // Tab activation helpers
+  const showLoginTab = ({ hideTabs = false } = {}) => {
+    tabsWrap.hidden = hideTabs;
+    tabsWrap.style.display = hideTabs ? "none" : "grid";
+    tabLogin.classList.add("is-active");
+    tabSignIn.classList.remove("is-active");
+    loginForm.hidden = false;
+    loginForm.style.display = "flex";
+    signInForm.hidden = true;
+    signInForm.style.display = "none";
     errorAlert.hidden = true;
+    title.textContent = hideTabs ? "Login" : "Login";
+    sub.textContent = "Welcome back! Enter your email and password to log in.";
+    card.scrollTop = 0;
+    setTimeout(() => {
+      try { loginEmailInput.focus(); } catch (e) {}
+    }, 50);
   };
 
-  tabSignIn.addEventListener("click", () => activateTab(tabSignIn, signInForm));
-  tabSignUp.addEventListener("click", () => activateTab(tabSignUp, signUpForm));
-  tabDemo.addEventListener("click", () => activateTab(tabDemo, demoView));
+  const showSignInTab = ({ hideTabs = false } = {}) => {
+    tabsWrap.hidden = hideTabs;
+    tabsWrap.style.display = hideTabs ? "none" : "grid";
+    tabSignIn.classList.add("is-active");
+    tabLogin.classList.remove("is-active");
+    signInForm.hidden = false;
+    signInForm.style.display = "flex";
+    loginForm.hidden = true;
+    loginForm.style.display = "none";
+    errorAlert.hidden = true;
+    title.textContent = "Sign-In";
+    sub.textContent = hideTabs
+      ? "Enter your details to sign in."
+      : "Fill in your details to create a new account.";
+    card.scrollTop = 0;
+    setTimeout(() => {
+      try { signinNameInput.focus(); } catch (e) {}
+    }, 50);
+  };
 
+  tabLogin.addEventListener("click", () => showLoginTab({ hideTabs: false }));
+  tabSignIn.addEventListener("click", () => showSignInTab({ hideTabs: false }));
+  tabDemo.addEventListener("click", triggerDemoLogin);
+
+  formWrap.appendChild(loginForm);
   formWrap.appendChild(signInForm);
-  formWrap.appendChild(signUpForm);
-  formWrap.appendChild(demoView);
   card.appendChild(formWrap);
 
   dialog.appendChild(card);
 
   return {
     element: dialog,
-    open: (mode = "signin") => {
+    open: (mode = "get-started") => {
       errorAlert.hidden = true;
-      if (mode === "signup") {
-        activateTab(tabSignUp, signUpForm);
+      if (mode === "signin-only" || mode === "navbar-signin" || mode === "signin") {
+        // Opened from navbar "Sign In": contains ONLY sign-in credentials (tabs hidden)
+        showSignInTab({ hideTabs: true });
+      } else if (mode === "login-only") {
+        showLoginTab({ hideTabs: true });
+      } else if (mode === "signup" || mode === "create-account") {
+        showSignInTab({ hideTabs: false });
       } else if (mode === "demo") {
-        activateTab(tabDemo, demoView);
+        triggerDemoLogin();
+        return;
       } else {
-        activateTab(tabSignIn, signInForm);
+        // Opened from "Get Started": presents the 3 tabs with Login as default
+        showLoginTab({ hideTabs: false });
       }
       safeOpen();
     },

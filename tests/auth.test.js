@@ -142,7 +142,7 @@ describe("createAuthModal component", () => {
     expect(authUser.name).toBe("Asha Sharma");
   });
 
-  it("integrates demo account option directly within both Sign In and Sign Up views", () => {
+  it("renders the 3 tabs: Login, Sign-In, and Try Demo Account button", () => {
     let authUser = null;
     const modal = createAuthModal({
       onAuthenticated: (u) => {
@@ -152,31 +152,18 @@ describe("createAuthModal component", () => {
 
     // Check tabs
     const tabs = modal.element.querySelectorAll(".auth-tab");
-    expect(tabs.length).toBe(3); // Sign In, Create Account, Demo
-    expect(tabs[2].textContent).toMatch(/demo account/i);
+    expect(tabs.length).toBe(3);
+    expect(tabs[0].textContent).toBe("Login");
+    expect(tabs[1].textContent).toBe("Sign-In");
+    expect(tabs[2].textContent).toBe("Try Demo Account");
 
-    // Check demo button inside Sign In form
-    modal.open("signin");
-    const forms = modal.element.querySelectorAll("form.auth-form");
-    const signInForm = forms[0];
-    const inDemoBtn = signInForm.querySelector(".auth-demo-option button");
-    expect(inDemoBtn).toBeTruthy();
-    expect(inDemoBtn.textContent).toMatch(/continue with demo account/i);
-
-    // Check demo button inside Sign Up form
-    modal.open("signup");
-    const signUpForm = forms[1];
-    const upDemoBtn = signUpForm.querySelector(".auth-demo-option button");
-    expect(upDemoBtn).toBeTruthy();
-    expect(upDemoBtn.textContent).toMatch(/try demo account before registering/i);
-
-    // Clicking demo button from sign-up launches demo
-    upDemoBtn.click();
+    // Clicking Try Demo Account tab button directly logs in
+    tabs[2].click();
     expect(authUser).toBeTruthy();
     expect(authUser.name).toBe("Asha Sharma");
   });
 
-  it("opens dedicated demo tab view with feature details and launch action", () => {
+  it("provides Login (email, password) and Sign-In (name, email, password, city) forms", () => {
     let authUser = null;
     const modal = createAuthModal({
       onAuthenticated: (u) => {
@@ -184,14 +171,45 @@ describe("createAuthModal component", () => {
       },
     });
 
-    modal.open("demo");
-    const demoView = modal.element.querySelector(".auth-demo-view");
-    expect(demoView.hidden).toBe(false);
-    expect(demoView.textContent).toMatch(/Asha Sharma/);
-    expect(demoView.textContent).toMatch(/Rajasthan Getaway/);
+    const forms = modal.element.querySelectorAll("form.auth-form");
+    expect(forms.length).toBe(2);
+    const loginForm = forms[0];
+    const signInForm = forms[1];
 
-    const launchBtn = demoView.querySelector("button");
-    launchBtn.click();
+    // Login fields: email & password
+    expect(loginForm.querySelector("#auth-login-email")).toBeTruthy();
+    expect(loginForm.querySelector("#auth-login-password")).toBeTruthy();
+
+    // Sign-In fields: name, email, password, home city (optional)
+    expect(signInForm.querySelector("#auth-signin-name")).toBeTruthy();
+    expect(signInForm.querySelector("#auth-signin-email")).toBeTruthy();
+    expect(signInForm.querySelector("#auth-signin-password")).toBeTruthy();
+    expect(signInForm.querySelector("#auth-signin-city")).toBeTruthy();
+
+    // modal.open defaults to Login (both for Get Started and Sign In)
+    modal.open();
+    expect(loginForm.hidden).toBe(false);
+    expect(signInForm.hidden).toBe(true);
+
+    // modal.open with signup switches to Sign-In
+    modal.open("signup");
+    expect(signInForm.hidden).toBe(false);
+    expect(loginForm.hidden).toBe(true);
+
+    // modal.open with login keeps Login visible
+    modal.open("login");
+    expect(loginForm.hidden).toBe(false);
+    expect(signInForm.hidden).toBe(true);
+
+    // modal.open with signin-only (from navbar) contains only sign-in credentials with tabs hidden
+    modal.open("signin-only");
+    expect(signInForm.hidden).toBe(false);
+    expect(loginForm.hidden).toBe(true);
+    expect(modal.element.querySelector(".auth-tabs").hidden).toBe(true);
+
+    // modal.open with demo logs in directly
+    modal.open("demo");
+    expect(authUser).toBeTruthy();
     expect(authUser.name).toBe("Asha Sharma");
   });
 });

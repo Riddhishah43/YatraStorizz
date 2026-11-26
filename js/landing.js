@@ -3,7 +3,7 @@
  * Boots theme, clears mount points, mounts all sections, and coordinates navigation.
  */
 import { resolveTheme, applyTheme } from "./services/preferences-service.js";
-import { createNavbar } from "./components/navbar.js";
+import { createNavbar } from "./components/navbar.js?v=5";
 import { renderFooter } from "./components/footer.js";
 import { initLandingNavigation } from "./modules/landing/landing-navigation.js";
 import { initHero } from "./modules/landing/hero.js";
@@ -13,7 +13,7 @@ import { initFeaturesShowcase } from "./modules/landing/features-showcase.js";
 import { initHowItWorks } from "./modules/landing/how-it-works.js";
 import { initTestimonials } from "./modules/landing/testimonials.js";
 import { initNewsletter } from "./modules/landing/newsletter.js";
-import { createAuthModal } from "./components/auth-modal.js";
+import { createAuthModal } from "./components/auth-modal.js?v=5";
 import { authService } from "./services/auth-service.js";
 import { showToast } from "./components/toast.js";
 import { qs, clear } from "./utils/dom-utils.js";
@@ -58,7 +58,7 @@ function init() {
     }
     const signupBtn = e.target.closest?.('[data-action="open-signup"]');
     if (signupBtn) {
-      authModal.open("signup");
+      authModal.open("get-started");
       return;
     }
     const logoutBtn = e.target.closest?.('[data-action="logout"]');

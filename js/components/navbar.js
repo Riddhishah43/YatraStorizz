@@ -76,7 +76,7 @@ export function createNavbar({
     const login = el("button", "link-btn site-nav__login", "Sign In");
     login.type = "button";
     login.dataset.action = "open-login";
-    login.setAttribute("aria-label", "Sign In or use Demo Account");
+    login.setAttribute("aria-label", "Sign In to YaatraStorizz");
 
     const cta = el("button", "btn btn--primary btn--small", "Get Started");
     cta.type = "button";
@@ -126,10 +126,10 @@ export function createNavbar({
     panelActions.appendChild(pdash);
     panelActions.appendChild(plogout);
   } else {
-    const plogin = el("button", "btn btn--secondary", "Sign In / Demo");
+    const plogin = el("button", "btn btn--secondary", "Sign In");
     plogin.type = "button";
     plogin.dataset.action = "open-login";
-    const pcta = el("button", "btn btn--primary", "Create Account");
+    const pcta = el("button", "btn btn--primary", "Get Started");
     pcta.type = "button";
     pcta.dataset.action = "open-signup";
     panelActions.appendChild(plogin);
