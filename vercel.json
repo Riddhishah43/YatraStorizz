@@ -1,14 +1,15 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false,
+  "redirects": [
+    { "source": "/dashboard", "destination": "/dashboard/dashboard.html", "permanent": false },
+    { "source": "/discover", "destination": "/discover/discover.html", "permanent": false },
+    { "source": "/trips", "destination": "/trips/trips.html", "permanent": false },
+    { "source": "/itinerary", "destination": "/itinerary/trip-details.html", "permanent": false },
+    { "source": "/budget", "destination": "/budget/budget.html", "permanent": false },
+    { "source": "/profile", "destination": "/profile/profile.html", "permanent": false }
+  ],
   "rewrites": [
-    { "source": "/", "destination": "/pages/index.html" },
-    { "source": "/dashboard", "destination": "/dashboard/dashboard.html" },
-    { "source": "/discover", "destination": "/discover/discover.html" },
-    { "source": "/trips", "destination": "/trips/trips.html" },
-    { "source": "/itinerary", "destination": "/itinerary/trip-details.html" },
-    { "source": "/budget", "destination": "/budget/budget.html" },
-    { "source": "/profile", "destination": "/profile/profile.html" }
+    { "source": "/", "destination": "/pages/index.html" }
   ],
   "headers": [
     {
