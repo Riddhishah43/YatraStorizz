@@ -1,4 +1,4 @@
-# YatraStorizz
+# YaatraStorizz
 
 A modern travel-planning web application built with **HTML5, CSS3, and Vanilla JavaScript ES Modules** — no frameworks, no build step. Discover destinations, organize trips, build day-by-day itineraries, and track travel budgets, all with localStorage persistence and light/dark themes.
 

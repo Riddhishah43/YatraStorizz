@@ -1,5 +1,5 @@
 {
-  "name": "yatrastorizz-root",
+  "name": "yaatrastorizz",
   "version": "1.0.0",
   "description": "YaatraStorizz Fullstack Travel Planner (Vanilla ES modules + Vercel Serverless Backend + Vitest)",
   "private": true,
