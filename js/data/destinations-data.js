@@ -1,8 +1,7 @@
 /**
- * destinations-data.js — curated landing showcase records.
- * Field spirit matches the Discover module (id, name, country, region,
- * category, description, image) so the two stay conceptually compatible.
- * Images are local SVG scenes (always exist, fully offline).
+ * destinations-data.js — curated landing showcase records (Prompt 4).
+ * Field spirit matches the Discover module so the two stay compatible.
+ * Suggested destinations: Kyoto, Bali, Paris, Manali, Santorini, Jaipur.
  */
 export const destinations = [
   {
@@ -11,8 +10,9 @@ export const destinations = [
     country: "Japan",
     region: "Kansai",
     category: "Culture",
-    description: "Temple lanes, tea houses, and gardens at their seasonal best.",
+    description: "Temple lanes, quiet bamboo groves, and centuries of living tea-ceremony tradition.",
     image: "../assets/images/destinations/kyoto.svg",
+    query: "Kyoto",
   },
   {
     id: "bali-indonesia",
@@ -20,17 +20,39 @@ export const destinations = [
     country: "Indonesia",
     region: "Bali",
     category: "Beaches",
-    description: "Cliff temples, surf breaks, and slow island days.",
+    description: "Cliff temples over the surf, emerald rice terraces, and slow tropical days.",
     image: "../assets/images/destinations/bali.svg",
+    query: "Bali",
   },
   {
-    id: "zermatt-switzerland",
-    name: "Zermatt",
-    country: "Switzerland",
-    region: "Valais",
+    id: "paris-france",
+    name: "Paris",
+    country: "France",
+    region: "Île-de-France",
+    category: "City Adventures",
+    description: "Cobblestone boulevards, world-class art, sidewalk bistros, and iconic river skylines.",
+    image: "../assets/images/destinations/istanbul.svg",
+    query: "Paris",
+  },
+  {
+    id: "manali-india",
+    name: "Manali",
+    country: "India",
+    region: "Himachal Pradesh",
     category: "Mountains",
-    description: "A car-free alpine village beneath the Matterhorn.",
+    description: "Pine valleys, riverside retreats, and mountain passes leading to high-altitude adventure.",
     image: "../assets/images/destinations/zermatt.svg",
+    query: "Manali",
+  },
+  {
+    id: "santorini-greece",
+    name: "Santorini",
+    country: "Greece",
+    region: "Cyclades",
+    category: "Coast",
+    description: "Whitewashed cliff-top villages overlooking the sapphire Aegean caldera.",
+    image: "../assets/images/destinations/santorini.svg",
+    query: "Santorini",
   },
   {
     id: "jaipur-india",
@@ -38,25 +60,8 @@ export const destinations = [
     country: "India",
     region: "Rajasthan",
     category: "Heritage",
-    description: "Forts, palaces, and bazaars in the Pink City.",
+    description: "Terracotta forts, royal palaces, craft bazaars, and vibrant Rajasthani culture.",
     image: "../assets/images/destinations/jaipur.svg",
-  },
-  {
-    id: "istanbul-turkiye",
-    name: "Istanbul",
-    country: "Türkiye",
-    region: "Marmara",
-    category: "Culture",
-    description: "Two continents, one skyline of domes and minarets.",
-    image: "../assets/images/destinations/istanbul.svg",
-  },
-  {
-    id: "santorini-greece",
-    name: "Santorini",
-    country: "Greece",
-    region: "Aegean Islands",
-    category: "Beaches",
-    description: "Whitewashed villages over a volcanic caldera.",
-    image: "../assets/images/destinations/santorini.svg",
+    query: "Jaipur",
   },
 ];

@@ -13,6 +13,8 @@ import {
   setTripFormValues,
 } from "../components/trip-form-modal.js";
 import { openDeleteConfirmation } from "../components/delete-confirmation.js";
+import { createReviewModal } from "../../js/components/review-modal.js";
+import { initSubpageNav } from "../../js/services/subpage-nav.js";
 
 const service = createTripService(); // localStorage-backed; swap adapter for an API later
 const view = { query: "", status: "all", sort: "startDate" };
@@ -59,6 +61,32 @@ function openEdit(id) {
   setTripFormValues(formDialog, trip);
 }
 
+function cascadeDeleteTrip(tripId) {
+  if (!tripId) return;
+  try {
+    const itKey = "yatrastorizz.itineraries.v1";
+    const itRaw = localStorage.getItem(itKey);
+    if (itRaw) {
+      const itAll = JSON.parse(itRaw);
+      if (itAll && itAll[tripId]) {
+        delete itAll[tripId];
+        localStorage.setItem(itKey, JSON.stringify(itAll));
+      }
+    }
+    const bgKey = "yatrastorizz.budgets.v1";
+    const bgRaw = localStorage.getItem(bgKey);
+    if (bgRaw) {
+      const bgAll = JSON.parse(bgRaw);
+      if (bgAll && bgAll[tripId]) {
+        delete bgAll[tripId];
+        localStorage.setItem(bgKey, JSON.stringify(bgAll));
+      }
+    }
+  } catch (err) {
+    console.warn("Cascade delete error:", err);
+  }
+}
+
 async function askDelete(id) {
   const trip = service.getById(id);
   if (!trip) {
@@ -72,6 +100,7 @@ async function askDelete(id) {
     showStatus("Could not delete the trip — please try again.");
     return;
   }
+  cascadeDeleteTrip(id);
   closeTripDetails(); // drop any open details for the deleted trip
   renderAll();
   showStatus(`Deleted “${trip.title}”.`);
@@ -93,6 +122,7 @@ function applyStoredTheme() {
 }
 
 function init() {
+  initSubpageNav();
   applyStoredTheme();
 
   formDialog = createTripFormModal({ onSubmit: () => formApi.submit() });
@@ -111,7 +141,78 @@ function init() {
     onError: (message) => showStatus(message),
   });
 
+  // Seed demo starter trips on first-ever launch if storage key has never been set
+  try {
+    if (localStorage.getItem("yatrastorizz.trips.v1") === null) {
+      const starterTrips = [
+        {
+          title: "Rajasthan Getaway",
+          destinations: "Jaipur, Udaipur",
+          startDate: "2026-11-10",
+          endDate: "2026-11-15",
+          plannedBudget: 18000,
+          currency: "INR",
+          description: "Historic forts, vibrant bazaars, and scenic lakes.",
+          companions: "Asha, Ravi",
+          notes: "Book Amber Fort tickets early.",
+        },
+        {
+          title: "Kerala Backwaters",
+          destinations: "Alleppey, Kochi",
+          startDate: "2026-12-05",
+          endDate: "2026-12-10",
+          plannedBudget: 25000,
+          currency: "INR",
+          description: "Houseboat cruise, coconut groves, and tranquil lagoons.",
+          companions: "Family",
+          notes: "Check weather forecast.",
+        },
+        {
+          title: "Himachal Trek",
+          destinations: "Manali, Solang",
+          startDate: "2026-06-01",
+          endDate: "2026-06-06",
+          plannedBudget: 15000,
+          currency: "INR",
+          description: "Alpine meadows, mountain passes, and river rafting.",
+          companions: "College friends",
+          notes: "Trekking gear required.",
+        },
+      ];
+      for (const t of starterTrips) service.create(t);
+    }
+  } catch {
+    /* ignore storage errors */
+  }
+
   renderAll();
+
+  // Check URL parameters (e.g. ?dest=Jaipur from Discover or Landing bento)
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const dest = params.get("dest");
+    if (dest) {
+      openCreate();
+      setTripFormValues(formDialog, { destinations: dest });
+    }
+  } catch {
+    /* ignore */
+  }
+
+  const reviewModal = createReviewModal({
+    onSubmit: () => {
+      showStatus("Review published! Thank you for rating your trip.");
+    },
+  });
+  document.body.appendChild(reviewModal.element);
+
+  document.addEventListener("click", (e) => {
+    const rateBtn = e.target.closest('[data-action="rate-trip"]');
+    if (rateBtn) {
+      const dest = rateBtn.dataset.tripDest || "";
+      reviewModal.open({ destination: dest });
+    }
+  });
 
   initTripEvents(
     {

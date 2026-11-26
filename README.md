@@ -12,6 +12,7 @@ A modern travel-planning web application built with **HTML5, CSS3, and Vanilla J
 | Trips | `trips/trips.html` | Create / view / edit / delete trips, search, status filter, sorting, stats |
 | Itinerary | `itinerary/trip-details.html?tripId=…` | Day tabs, activity timeline, add/edit/delete, drag-and-drop + button reordering |
 | Budget | `budget/budget.html` | Per-trip budget, expense CRUD, category breakdown, search/filter/sort |
+| Profile & Settings | `profile/profile.html` | User profile, travel persona, currency & category preferences, JSON backup export/import, data reset |
 
 ## Design system
 

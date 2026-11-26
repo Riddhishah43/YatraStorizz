@@ -1,0 +1,61 @@
+/**
+ * inspiration-data.js — curated travel inspiration collection (Prompt 7).
+ * Editorial travel experiences highlighting different journey styles.
+ */
+export const INSPIRATION_ITEMS = Object.freeze([
+  {
+    id: "insp-mountains",
+    experience: "Mountain Escapes",
+    destination: "Manali & Solang Valley",
+    location: "Himachal Pradesh, India",
+    caption: "Crisp pine air, snow-clad passes, and trails that awaken your sense of adventure.",
+    category: "Mountains",
+    image: "../assets/images/destinations/zermatt.svg",
+    query: "Manali",
+    size: "tall",
+  },
+  {
+    id: "insp-beaches",
+    experience: "Beach Holidays",
+    destination: "Palolem & South Goa",
+    location: "Goa, India",
+    caption: "Crescent shores, swaying palms, and quiet sunsets over warm ocean tides.",
+    category: "Beaches",
+    image: "../assets/images/destinations/bali.svg",
+    query: "Goa",
+    size: "regular",
+  },
+  {
+    id: "insp-cities",
+    experience: "City Adventures",
+    destination: "Paris & Istanbul",
+    location: "Europe & Türkiye",
+    caption: "Cobblestone alleys, historic domes, and vibrant street café culture.",
+    category: "Cities",
+    image: "../assets/images/destinations/istanbul.svg",
+    query: "Istanbul",
+    size: "regular",
+  },
+  {
+    id: "insp-culture",
+    experience: "Cultural Exploration",
+    destination: "Jaipur & Kyoto",
+    location: "Rajasthan & Kansai",
+    caption: "Centuries of royal hill-forts, tea gardens, and timeless artisan traditions.",
+    category: "Cultural Experiences",
+    image: "../assets/images/destinations/kyoto.svg",
+    query: "Kyoto",
+    size: "wide",
+  },
+  {
+    id: "insp-nature",
+    experience: "Nature Retreats",
+    destination: "Alleppey & Munnar",
+    location: "Kerala, India",
+    caption: "Slow houseboat canals, emerald tea hills, and misty tropical mornings.",
+    category: "Nature",
+    image: "../assets/images/destinations/jaipur.svg",
+    query: "Alleppey",
+    size: "regular",
+  },
+]);

@@ -3,22 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Travel Budget — YatraStorizz</title>
-  <meta name="description" content="YatraStorizz budget tracker: set trip budgets, record expenses, and monitor spending by category." />
+  <title>Travel Budget — YaatraStorizz</title>
+  <meta name="description" content="YaatraStorizz budget tracker: set trip budgets, record expenses, and monitor spending by category." />
   <link rel="stylesheet" href="css/budget.css" />
+  <script>
+    try {
+      var saved = localStorage.getItem("yatrastorizz.theme");
+      var theme = saved === "light" || saved === "dark" ? saved :
+        (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = theme;
+    } catch (e) { /* system default applies */ }
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#budget-main">Skip to budget content</a>
 
   <nav class="top-nav" aria-label="Primary">
-    <a class="top-nav__brand" href="../dashboard/dashboard.html">YatraStorizz</a>
+    <a class="top-nav__brand" href="../index.html">✈ YaatraStorizz</a>
     <div class="top-nav__links">
+      <a href="../index.html">Home</a>
       <a href="../dashboard/dashboard.html">Dashboard</a>
       <a href="../discover/discover.html">Discover</a>
       <a href="../trips/trips.html">Trips</a>
       <a href="../itinerary/trip-details.html">Itinerary</a>
       <a href="budget.html" aria-current="page">Budget</a>
       <button type="button" class="btn btn--ghost btn--small" data-action="theme-toggle" aria-label="Toggle colour theme">◐ Theme</button>
+      <a href="../profile/profile.html" class="avatar" id="nav-avatar" aria-label="Profile and Settings">RS</a>
+      <button type="button" class="btn btn--ghost btn--small" data-action="logout" aria-label="Log out of session">Log Out</button>
     </div>
   </nav>
 

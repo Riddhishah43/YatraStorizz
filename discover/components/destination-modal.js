@@ -4,6 +4,7 @@
  * the prepared view model and manages open/close/focus.
  */
 import { isAllowedImageUrl } from "./destination-card.js";
+import { reviewsService } from "../../js/services/reviews-service.js";
 
 const currencyFmt = new Intl.NumberFormat("en-IN", {
   style: "currency",
@@ -47,6 +48,14 @@ export function renderModalContent(dialog, details, favorite) {
   }
 
   body.appendChild(el("h2", "modal__title", details.name));
+
+  // Google Reviews Rating Summary Badge
+  const summary = reviewsService.getRatingSummary(details.name);
+  const ratingWrap = el("div", "modal__rating");
+  ratingWrap.style.cssText = "display: flex; align-items: center; gap: 0.4rem; color: #F59E0B; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem;";
+  ratingWrap.textContent = `★ ${summary.average.toFixed(1)} (${summary.total} reviews)`;
+  body.appendChild(ratingWrap);
+
   body.appendChild(
     el("p", "modal__loc", details.region ? `${details.region}, ${details.country}` : details.country)
   );
@@ -82,6 +91,29 @@ export function renderModalContent(dialog, details, favorite) {
     if (sec) body.appendChild(sec);
   }
 
+  // Community Reviews Section (Google Reviews style)
+  const destReviews = reviewsService.getAllReviews({ destination: details.name });
+  if (destReviews.length > 0) {
+    const revSec = el("div", "modal__section modal__reviews");
+    revSec.appendChild(el("h3", "modal__subtitle", `Traveller Reviews (${destReviews.length})`));
+    for (const r of destReviews.slice(0, 3)) {
+      const card = el("div", "modal-review-card");
+      card.style.cssText = "background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; margin-bottom: 0.5rem;";
+      const headerRow = el("div", "");
+      headerRow.style.cssText = "display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.25rem;";
+      headerRow.appendChild(el("strong", "", r.author || "Traveller"));
+      const starsSpan = el("span", "", "★".repeat(r.rating) + ` (${r.travelDate || "Recent"})`);
+      starsSpan.style.color = "#F59E0B";
+      headerRow.appendChild(starsSpan);
+      card.appendChild(headerRow);
+      const commentP = el("p", "", r.comment);
+      commentP.style.cssText = "margin: 0; font-size: 0.85rem; color: var(--color-text); line-height: 1.35;";
+      card.appendChild(commentP);
+      revSec.appendChild(card);
+    }
+    body.appendChild(revSec);
+  }
+
   const actions = el("div", "modal__actions");
   const fav = el(
     "button",
@@ -95,6 +127,11 @@ export function renderModalContent(dialog, details, favorite) {
   fav.setAttribute("aria-pressed", favorite ? "true" : "false");
   fav.setAttribute("aria-label", favorite ? `Remove ${details.name} from favorites` : `Save ${details.name} to favorites`);
 
+  const rate = el("button", "btn btn--secondary btn--small", "★ Rate & Review");
+  rate.type = "button";
+  rate.dataset.action = "rate-destination";
+  rate.dataset.destinationName = details.name;
+
   const plan = el("button", "btn btn--primary btn--small", "Plan a trip");
   plan.type = "button";
   plan.dataset.action = "plan-trip";
@@ -102,6 +139,7 @@ export function renderModalContent(dialog, details, favorite) {
   plan.setAttribute("aria-label", `Plan a trip to ${details.name}`);
 
   actions.appendChild(fav);
+  actions.appendChild(rate);
   actions.appendChild(plan);
   body.appendChild(actions);
 }

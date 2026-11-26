@@ -36,6 +36,7 @@ import {
   setActivityFormWarnings,
   setActivityFormSubmitting,
 } from "../components/activity-form.js";
+import { initSubpageNav } from "../../js/services/subpage-nav.js";
 
 const tripService = createTripService();
 const itineraryService = createItineraryService();
@@ -200,18 +201,22 @@ function applyStoredTheme() {
 }
 
 function init() {
+  initSubpageNav();
   applyStoredTheme();
   const main = document.getElementById("itinerary-main");
   const params = new URLSearchParams(window.location.search);
   const tripId = params.get("tripId")?.trim() ?? "";
 
-  if (!tripId) {
-    showItineraryError(main, "No trip was selected. Open an itinerary from the Trips page.");
-    return;
-  }
-  const trip = tripService.getById(tripId);
+  let trip = tripId ? tripService.getById(tripId) : null;
   if (!trip) {
-    showItineraryError(main, "That trip does not exist (it may have been deleted).");
+    const all = tripService.getAll();
+    if (all.length > 0) {
+      trip = all[0];
+    }
+  }
+
+  if (!trip) {
+    showItineraryError(main, "No trips found. Create a trip from My Trips to start building an itinerary.");
     return;
   }
   const days = generateTripDays(trip.startDate, trip.endDate);

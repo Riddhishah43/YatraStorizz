@@ -105,6 +105,14 @@ export function openTripDetails(service, id, { onEdit, onDelete } = {}) {
   edit.dataset.action = "edit-trip";
   edit.dataset.tripId = view.id;
   edit.textContent = "Edit trip";
+
+  const rate = document.createElement("button");
+  rate.type = "button";
+  rate.className = "btn btn--ghost";
+  rate.dataset.action = "rate-trip";
+  rate.dataset.tripDest = view.destinationsText;
+  rate.textContent = "★ Rate Trip";
+
   const del = document.createElement("button");
   del.type = "button";
   del.className = "btn btn--ghost btn--danger";
@@ -113,6 +121,7 @@ export function openTripDetails(service, id, { onEdit, onDelete } = {}) {
   del.textContent = "Delete trip";
   actions.appendChild(plan);
   actions.appendChild(edit);
+  actions.appendChild(rate);
   actions.appendChild(del);
 
   dialog.appendChild(close);

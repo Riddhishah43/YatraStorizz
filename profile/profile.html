@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile &amp; Settings — YaatraStorizz</title>
+  <meta name="description" content="Manage your YaatraStorizz profile, travel preferences, default currency, and export/import backup data." />
+  <link rel="stylesheet" href="css/profile.css" />
+  <script>
+    try {
+      var saved = localStorage.getItem("yatrastorizz.theme");
+      var theme = saved === "light" || saved === "dark" ? saved :
+        (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.dataset.theme = theme;
+    } catch (e) { /* system default applies */ }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to profile settings</a>
+
+  <nav class="top-nav" aria-label="Primary">
+    <a class="top-nav__brand" href="../index.html">✈ YaatraStorizz</a>
+    <div class="top-nav__links">
+      <a href="../index.html">Home</a>
+      <a href="../dashboard/dashboard.html">Dashboard</a>
+      <a href="../discover/discover.html">Discover</a>
+      <a href="../trips/trips.html">Trips</a>
+      <a href="../itinerary/trip-details.html">Itinerary</a>
+      <a href="../budget/budget.html">Budget</a>
+      <button type="button" class="btn btn--ghost btn--small" data-action="theme-toggle" aria-label="Toggle colour theme">◐ Theme</button>
+      <a href="profile.html" class="avatar" id="nav-avatar" aria-label="Profile and Settings" aria-current="page">RS</a>
+      <button type="button" class="btn btn--ghost btn--small" data-action="logout" aria-label="Log out of session">Log Out</button>
+    </div>
+  </nav>
+
+  <main id="main" class="profile-main">
+    <header class="profile-header">
+      <h1>Profile &amp; Settings</h1>
+      <p>Personalize your travel persona, set default currencies, and manage your private offline data.</p>
+    </header>
+
+    <div class="profile-grid">
+      <!-- Left Column: Identity Preview Card -->
+      <aside class="user-card" aria-label="User Profile Card">
+        <div class="avatar-large" id="preview-avatar">RS</div>
+        <h2 class="user-card__name" id="preview-name">Riddhi Sen</h2>
+        <p class="user-card__email" id="preview-email">riddhi@yaatrastorizz.demo</p>
+        <span class="user-card__tag" id="preview-city">📍 Mumbai, India</span>
+        <p class="user-card__bio" id="preview-bio">Solo backpacker, culture enthusiast, and mindful traveller.</p>
+
+        <div class="user-card__stats">
+          <div class="stat-pill">
+            <p class="stat-pill__num" id="stat-trips">3</p>
+            <p class="stat-pill__label">Trips Planned</p>
+          </div>
+          <div class="stat-pill">
+            <p class="stat-pill__num" id="stat-currency">INR (₹)</p>
+            <p class="stat-pill__label">Preferred</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Settings Sections -->
+      <div class="settings-stack">
+        <!-- 1. Profile Information -->
+        <section class="settings-section" aria-labelledby="section-profile-title">
+          <h2 id="section-profile-title" class="settings-section__title">User Profile</h2>
+          <p class="settings-section__desc">Your identity and travel information, stored securely on this device.</p>
+
+          <form id="profile-form" class="form-grid" novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label class="field__label" for="profile-name">Full Name *</label>
+                <input type="text" id="profile-name" name="name" class="field__control" required />
+                <p class="field__error" id="name-error" hidden></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="profile-email">Email Address</label>
+                <input type="email" id="profile-email" name="email" class="field__control" />
+                <p class="field__error" id="email-error" hidden></p>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label class="field__label" for="profile-city">Home City &amp; Country</label>
+                <input type="text" id="profile-city" name="homeCity" class="field__control" placeholder="e.g. Mumbai, India" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="profile-bio">Bio / Travel Persona</label>
+              <textarea id="profile-bio" name="bio" class="field__control" rows="3" placeholder="Tell a little about your travel style…"></textarea>
+              <p class="field__hint">Brief summary of what kind of journeys you enjoy.</p>
+            </div>
+
+            <div>
+              <button type="submit" class="btn btn--primary">Save Profile Changes</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- 2. Travel & Regional Preferences -->
+        <section class="settings-section" aria-labelledby="section-prefs-title">
+          <h2 id="section-prefs-title" class="settings-section__title">Travel Preferences</h2>
+          <p class="settings-section__desc">Set defaults for new trips, expense tracking, and preferred destinations.</p>
+
+          <form id="preferences-form" class="form-grid" novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label class="field__label" for="pref-currency">Default Currency</label>
+                <select id="pref-currency" name="currency" class="field__control">
+                  <option value="INR">INR (₹) — Indian Rupee</option>
+                  <option value="USD">USD ($) — US Dollar</option>
+                  <option value="EUR">EUR (€) — Euro</option>
+                  <option value="GBP">GBP (£) — British Pound</option>
+                </select>
+                <p class="field__hint">New trips and budgets automatically pre-fill with this currency.</p>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="pref-distance">Distance Unit</label>
+                <select id="pref-distance" name="distanceUnit" class="field__control">
+                  <option value="km">Kilometers (km)</option>
+                  <option value="mi">Miles (mi)</option>
+                </select>
+                <p class="field__hint">Used for itinerary routes and destination distances.</p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__label">Favorite Travel Interests</label>
+              <div class="category-chips" id="category-chips">
+                <!-- Checkboxes injected dynamically -->
+              </div>
+              <p class="field__hint">Highlighted in Discover search and trip suggestions.</p>
+            </div>
+
+            <div>
+              <button type="submit" class="btn btn--primary">Save Travel Preferences</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- 3. Offline Data & Backup Management -->
+        <section class="settings-section" aria-labelledby="section-backup-title">
+          <h2 id="section-backup-title" class="settings-section__title">Data &amp; Backup Management</h2>
+          <p class="settings-section__desc">All your trips, itineraries, and expenses are stored privately in your browser. Back them up or transfer them anytime.</p>
+
+          <div class="backup-card">
+            <!-- Export -->
+            <div class="backup-item">
+              <div class="backup-item__text">
+                <h4>Export Offline Backup</h4>
+                <p>Download a snapshot of all your trips, budgets, and saved destinations as a <code>.json</code> file.</p>
+              </div>
+              <button type="button" class="btn btn--secondary" id="btn-export">Export Data (.json)</button>
+            </div>
+
+            <!-- Import -->
+            <div class="backup-item">
+              <div class="backup-item__text">
+                <h4>Restore From Backup</h4>
+                <p>Load a previously exported YaatraStorizz backup file to restore your trips and itinerary records.</p>
+              </div>
+              <div>
+                <input type="file" id="file-import" accept=".json,application/json" hidden />
+                <button type="button" class="btn btn--secondary" id="btn-import-trigger">Upload &amp; Restore</button>
+              </div>
+            </div>
+
+            <!-- Reset -->
+            <div class="backup-item">
+              <div class="backup-item__text">
+                <h4>Reset Demo Workspace</h4>
+                <p>Clear all local trips and preferences, restoring the clean default starter dataset.</p>
+              </div>
+              <button type="button" class="btn btn--danger btn--small" id="btn-reset">Reset to Defaults</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div id="status-region" class="status-region" role="status" aria-live="polite"></div>
+
+  <script type="module" src="js/profile.js"></script>
+</body>
+</html>

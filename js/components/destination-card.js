@@ -48,8 +48,10 @@ export function createDestinationCard(dest, { href = "../discover/discover.html"
     const tag = el("span", "badge", d.category.trim());
     body.appendChild(tag);
   }
+  const targetQuery = d.query || d.name || "";
+  const targetHref = href !== "../discover/discover.html" ? href : `../discover/discover.html?q=${encodeURIComponent(targetQuery)}`;
   const link = el("a", "link-btn", `Explore in Discover →`);
-  link.href = href;
+  link.href = targetHref;
   link.setAttribute("aria-label", `Explore ${name} in Discover`);
   body.appendChild(link);
   card.appendChild(body);

@@ -32,6 +32,7 @@ import {
   clearExpenseFormErrors,
   setExpenseFormSubmitting,
 } from "../components/expense-form.js";
+import { initSubpageNav } from "../../js/services/subpage-nav.js";
 import { getCategoryOptions } from "../components/expense-category.js";
 
 const tripService = createTripService();
@@ -293,6 +294,7 @@ function showNoTrips(main) {
 }
 
 function init() {
+  initSubpageNav();
   applyStoredTheme();
   populateCategoryFilter();
   const trips = populateTripSelector();

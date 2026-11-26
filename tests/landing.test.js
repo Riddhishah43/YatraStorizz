@@ -8,6 +8,8 @@ import {
 } from "../js/services/preferences-service.js";
 import { createDestinationCard, renderDestinationCards, FALLBACK_IMAGE } from "../js/components/destination-card.js";
 import { createFeatureCard } from "../js/components/feature-card.js";
+import { createInspirationCard } from "../js/components/inspiration-card.js";
+import { createTestimonialCard } from "../js/components/testimonial-card.js";
 import { showToast } from "../js/components/toast.js";
 import { createFooter } from "../js/components/footer.js";
 import { initLandingNavigation } from "../js/modules/landing/landing-navigation.js";
@@ -150,8 +152,29 @@ describe("landing-navigation", () => {
   });
 });
 
-describe("testimonials fallback", () => {
-  it("renders the alternative section when no verified testimonials exist", () => {
+describe("inspiration-card", () => {
+  it("renders editorial card with badge, title, and discover link", () => {
+    const card = createInspirationCard({
+      destination: "Swiss Alps",
+      experience: "Mountain Escapes",
+      location: "Switzerland",
+      caption: "Crisp air and towering peaks.",
+      category: "nature",
+      query: "mountain",
+    });
+    expect(card.querySelector(".insp-card__title")?.textContent).toBe("Swiss Alps");
+    expect(card.querySelector(".insp-card__tag")?.textContent).toBe("Mountain Escapes");
+    expect(card.querySelector("a")?.getAttribute("href")).toContain("discover.html?q=mountain");
+  });
+  it("renders safely without script execution", () => {
+    const card = createInspirationCard({ destination: '<img src=x onerror=alert(1)>' });
+    expect(card.querySelector("img.insp-card__img")).toBeTruthy();
+    expect(card.querySelector("h3")?.textContent).toContain('<img src=x onerror=alert(1)>');
+  });
+});
+
+describe("testimonials slider", () => {
+  it("renders accessible carousel with authentic development demo stories", () => {
     const section = el("section");
     section.id = "testimonials";
     const heading = el("h2", null, "Testimonials");
@@ -162,10 +185,27 @@ describe("testimonials fallback", () => {
     mount.id = "testimonials-mount";
     section.append(heading, sub, mount);
     document.body.appendChild(section);
-    expect(initTestimonials()).toBe("alternative");
-    expect(heading.textContent).toBe("Designed for Every Kind of Trip");
-    expect(mount.querySelectorAll(".trip-style-card").length).toBe(4);
-    expect(mount.textContent).not.toMatch(/5 stars|★★★★★/);
+
+    expect(initTestimonials()).toBe("slider");
+    expect(heading.textContent).toBe("Stories From Happy Travellers");
+    expect(mount.querySelectorAll(".testimonial-card").length).toBeGreaterThanOrEqual(3);
+    // Explicit prototype / demo disclaimer badge
+    expect(mount.querySelector(".testimonial-card__badge")?.textContent).toBe("Demo Scenario");
+
+    // Accessible controls present
+    const prevBtn = mount.querySelector("button[aria-label='Previous story']");
+    const nextBtn = mount.querySelector("button[aria-label='Next story']");
+    const dots = mount.querySelectorAll(".slider__dot");
+    expect(prevBtn).toBeTruthy();
+    expect(nextBtn).toBeTruthy();
+    expect(dots.length).toBeGreaterThanOrEqual(3);
+
+    // Keyboard support
+    const slider = mount.querySelector(".slider");
+    expect(slider?.getAttribute("role")).toBe("region");
+    expect(slider?.getAttribute("tabindex")).toBe("0");
+    slider?.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+    expect(dots[1]?.classList.contains("is-active")).toBe(true);
   });
 });
 

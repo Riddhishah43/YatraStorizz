@@ -13,6 +13,7 @@
  */
 import { renderDashboard } from "./dashboard-renderer.js";
 import { initDashboardEvents, showStatus } from "./dashboard-events.js";
+import { initSubpageNav } from "../../js/services/subpage-nav.js";
 
 const STORAGE_KEY = "yatrastorizz.dashboard.v1";
 const THEME_KEY = "yatrastorizz.theme";
@@ -58,9 +59,61 @@ const DEMO_DATA = Object.freeze({
   ]),
 });
 
-/** Load dashboard data: localStorage override wins, else demo fixture. */
+/** Load dashboard data: live trips storage wins, then dashboard override, else demo fixture. */
 function loadDashboardData() {
   try {
+    const tripsRaw = localStorage.getItem("yatrastorizz.trips.v1");
+    if (tripsRaw) {
+      const tripsParsed = JSON.parse(tripsRaw);
+      if (Array.isArray(tripsParsed) && tripsParsed.length > 0) {
+        let budgetsData = {};
+        try {
+          const bRaw = localStorage.getItem("yatrastorizz.budgets.v1");
+          if (bRaw) budgetsData = JSON.parse(bRaw) || {};
+        } catch {
+          /* ignore */
+        }
+
+        const mappedTrips = tripsParsed.map((t) => {
+          const tripBudgetEntry = budgetsData[t.id];
+          let actual = 0;
+          if (tripBudgetEntry && Array.isArray(tripBudgetEntry.expenses)) {
+            actual = tripBudgetEntry.expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+          } else if (typeof t.actualExpenses === "number") {
+            actual = t.actualExpenses;
+          }
+          const destNames = Array.isArray(t.destinations)
+            ? t.destinations.map((d) => (typeof d === "string" ? d : d?.name)).filter(Boolean)
+            : (typeof t.destination === "string" ? [t.destination] : []);
+
+          return {
+            ...t,
+            destinations: destNames,
+            plannedBudget: t.budget ?? t.plannedBudget ?? 0,
+            actualExpenses: actual,
+          };
+        });
+
+        const activities = [];
+        mappedTrips.forEach((t) => {
+          if (t.createdAt) {
+            activities.push({
+              id: `act-${t.id}`,
+              type: "trip_created",
+              description: `Created ${t.title}`,
+              timestamp: t.createdAt,
+            });
+          }
+        });
+
+        return {
+          trips: mappedTrips,
+          activities: activities.length > 0 ? activities : [...DEMO_DATA.activities],
+          source: "localStorage.trips",
+        };
+      }
+    }
+
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
@@ -97,9 +150,10 @@ function setHeader() {
   const greetingEl = document.getElementById("dashboard-greeting");
   const dateEl = document.getElementById("dashboard-date");
   const now = new Date();
+  const h = now.getHours();
+  const part = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
+
   if (greetingEl) {
-    const h = now.getHours();
-    const part = h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
     greetingEl.textContent = `${part} — welcome back!`;
   }
   if (dateEl) {
@@ -111,9 +165,32 @@ function setHeader() {
     }).format(now);
     dateEl.setAttribute("datetime", now.toISOString().slice(0, 10));
   }
+
+  // Personalize with stored profile if available
+  try {
+    const rawProfile = localStorage.getItem("yatrastorizz.profile.v1");
+    if (rawProfile) {
+      const p = JSON.parse(rawProfile);
+      if (p?.name && greetingEl) {
+        const firstName = p.name.trim().split(/\s+/)[0];
+        greetingEl.textContent = `${part}, ${firstName} — welcome back!`;
+      }
+      if (p?.name) {
+        const parts = p.name.trim().split(/\s+/);
+        const initials = parts.length === 1 ? parts[0].slice(0, 2).toUpperCase() : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        const navAv = document.getElementById("nav-avatar");
+        const dashAv = document.getElementById("dash-avatar");
+        if (navAv) navAv.textContent = initials;
+        if (dashAv) dashAv.textContent = initials;
+      }
+    }
+  } catch {
+    /* fallback to defaults */
+  }
 }
 
 function init() {
+  initSubpageNav();
   applyStoredTheme();
   setHeader();
   const mounts = {
@@ -133,10 +210,24 @@ function init() {
     showStatus(document, "Dashboard failed to load. Please refresh the page.");
   }
   initDashboardEvents(document, {
-    onPlanTrip: () => showStatus(document, "Trip creation is not connected yet — this demo does not create trips."),
-    onViewTrip: (id) => showStatus(document, `Trip “${id}” preview is not connected yet.`),
-    onViewAllTrips: () => showStatus(document, "The full trips list is not connected yet."),
-    onQuickAction: () => showStatus(document, "That section is not connected yet in this demo."),
+    onPlanTrip: () => {
+      window.location.href = "../trips/trips.html";
+    },
+    onViewTrip: (id) => {
+      window.location.href = `../itinerary/trip-details.html?tripId=${encodeURIComponent(id)}`;
+    },
+    onViewAllTrips: () => {
+      window.location.href = "../trips/trips.html";
+    },
+    onQuickAction: (action) => {
+      if (action === "budget") {
+        window.location.href = "../budget/budget.html";
+      } else if (action === "discover") {
+        window.location.href = "../discover/discover.html";
+      } else {
+        window.location.href = "../trips/trips.html";
+      }
+    },
   });
 }
 

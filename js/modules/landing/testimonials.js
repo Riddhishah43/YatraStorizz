@@ -1,48 +1,147 @@
 /**
- * testimonials.js — real testimonials ONLY. With an empty dataset this
- * renders the "Designed for Every Kind of Trip" alternative section
- * (static trip-style scenarios, not fake endorsements).
+ * testimonials.js — accessible traveller stories slider (Prompt 8 & Reviews).
+ * Pure DOM, accessible keyboard & button controls, Google Reviews rating summary,
+ * and interactive "Write a Review" dialog.
  */
-import { testimonials } from "../../data/testimonials-data.js";
+import { reviewsService } from "../../services/reviews-service.js";
 import { createTestimonialCard } from "../../components/testimonial-card.js";
+import { createReviewModal } from "../../components/review-modal.js";
 import { el, clear, qs } from "../../utils/dom-utils.js";
 
-const TRIP_STYLES = Object.freeze([
-  { icon: "🎒", title: "Solo escapes", text: "One bag, your pace — every stop and rupee accounted for." },
-  { icon: "👨‍👩‍👧", title: "Family holidays", text: "Keep everyone's must-dos on one shared day-by-day plan." },
-  { icon: "🧑‍🤝‍🧑", title: "Friends' getaways", text: "Split ideas, settle plans, and track shared spending." },
-  { icon: "💼", title: "Work trips", text: "Tight schedules, clean expense records, zero chaos." },
-]);
+let modalInstance = null;
 
-/** @returns {"testimonials"|"alternative"} which branch rendered */
 export function initTestimonials(root = document) {
   const section = qs(root, "#testimonials");
   const mount = qs(root, "#testimonials-mount");
-  if (!section || !mount) return "alternative";
+  if (!section || !mount) return "none";
   clear(mount);
-  const valid = testimonials.filter((t) => t && t.name && t.quote);
-  if (valid.length > 0) {
-    const heading = qs(section, "[data-testimonials-heading]");
-    if (heading) heading.textContent = "Loved by travellers";
-    const grid = el("div", "testimonials-grid");
-    for (const t of valid) grid.appendChild(createTestimonialCard(t));
-    mount.appendChild(grid);
-    return "testimonials";
-  }
+
   const heading = qs(section, "[data-testimonials-heading]");
-  if (heading) heading.textContent = "Designed for Every Kind of Trip";
+  if (heading) heading.textContent = "Stories From Happy Travellers";
   const sub = qs(section, "[data-testimonials-sub]");
-  if (sub) sub.textContent = "Sample scenarios below illustrate who YatraStorizz is built for — not customer reviews.";
-  const grid = el("div", "trip-styles-grid");
-  for (const s of TRIP_STYLES) {
-    const card = el("article", "trip-style-card");
-    const icon = el("span", "trip-style-card__icon", s.icon);
-    icon.setAttribute("aria-hidden", "true");
-    card.appendChild(icon);
-    card.appendChild(el("h3", null, s.title));
-    card.appendChild(el("p", null, s.text));
-    grid.appendChild(card);
+  if (sub) {
+    sub.textContent = "Every journey is different. Here's what travellers love about planning with YaatraStorizz.";
   }
-  mount.appendChild(grid);
-  return "alternative";
+
+  // Ensure Review Modal is mounted on body
+  if (!modalInstance && typeof document !== "undefined") {
+    modalInstance = createReviewModal({
+      onSubmit: () => {
+        initTestimonials(root);
+      },
+    });
+    document.body.appendChild(modalInstance.element);
+  }
+
+  // Google Reviews Summary Bar
+  const summary = reviewsService.getRatingSummary();
+  const summaryBar = el("div", "reviews-summary-bar");
+
+  const scoreWrap = el("div", "reviews-summary-bar__score");
+  const scoreNum = el("span", "score-val", `${summary.average.toFixed(1)}`);
+  const starsWrap = el("span", "score-stars", "★".repeat(Math.round(summary.average)));
+  const countDesc = el(
+    "span",
+    "score-count",
+    `Overall Rating · Based on ${summary.total} traveller experiences`
+  );
+  scoreWrap.appendChild(scoreNum);
+  scoreWrap.appendChild(starsWrap);
+  scoreWrap.appendChild(countDesc);
+
+  const writeBtn = el("button", "btn btn--primary btn--small reviews-summary-bar__btn", "★ Write a Review");
+  writeBtn.type = "button";
+  writeBtn.addEventListener("click", () => {
+    modalInstance?.open();
+  });
+
+  summaryBar.appendChild(scoreWrap);
+  summaryBar.appendChild(writeBtn);
+  mount.appendChild(summaryBar);
+
+  const items = reviewsService.getAllReviews();
+  if (items.length === 0) {
+    mount.appendChild(el("p", "empty-state", "No traveller stories available yet. Be the first to review!"));
+    return "empty";
+  }
+
+  // Slider container
+  const slider = el("div", "slider");
+  slider.setAttribute("role", "region");
+  slider.setAttribute("aria-label", "Traveller stories carousel");
+  slider.setAttribute("tabindex", "0");
+
+  const track = el("div", "slider__track");
+  const cards = items.map((t) => {
+    const slide = el("div", "slider__slide");
+    slide.appendChild(createTestimonialCard(t));
+    track.appendChild(slide);
+    return slide;
+  });
+  slider.appendChild(track);
+
+  // Controls (Prev / Next & Dots)
+  const controls = el("div", "slider__controls");
+
+  const prevBtn = el("button", "btn btn--ghost btn--small slider__btn", "← Previous");
+  prevBtn.type = "button";
+  prevBtn.setAttribute("aria-label", "Previous story");
+
+  const dotsWrap = el("div", "slider__dots");
+  dotsWrap.setAttribute("role", "tablist");
+  dotsWrap.setAttribute("aria-label", "Story selection");
+
+  const dots = items.map((_, i) => {
+    const dot = el("button", "slider__dot", "");
+    dot.type = "button";
+    dot.setAttribute("role", "tab");
+    dot.setAttribute("aria-label", `Go to story ${i + 1}`);
+    dot.setAttribute("aria-selected", i === 0 ? "true" : "false");
+    dot.addEventListener("click", () => goTo(i));
+    dotsWrap.appendChild(dot);
+    return dot;
+  });
+
+  const nextBtn = el("button", "btn btn--ghost btn--small slider__btn", "Next →");
+  nextBtn.type = "button";
+  nextBtn.setAttribute("aria-label", "Next story");
+
+  controls.appendChild(prevBtn);
+  controls.appendChild(dotsWrap);
+  controls.appendChild(nextBtn);
+  slider.appendChild(controls);
+
+  mount.appendChild(slider);
+
+  let currentIndex = 0;
+
+  function goTo(index) {
+    if (index < 0) currentIndex = items.length - 1;
+    else if (index >= items.length) currentIndex = 0;
+    else currentIndex = index;
+
+    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("is-active", i === currentIndex);
+      dot.setAttribute("aria-selected", i === currentIndex ? "true" : "false");
+    });
+  }
+
+  prevBtn.addEventListener("click", () => goTo(currentIndex - 1));
+  nextBtn.addEventListener("click", () => goTo(currentIndex + 1));
+
+  // Keyboard navigation when focused
+  slider.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      goTo(currentIndex - 1);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      goTo(currentIndex + 1);
+    }
+  });
+
+  goTo(0);
+  return "slider";
 }

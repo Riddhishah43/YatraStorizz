@@ -137,6 +137,9 @@ function tripDestinations(trip) {
   const out = [];
   const push = (v) => {
     if (typeof v === "string" && v.trim() !== "") out.push(v.trim());
+    else if (v && typeof v === "object" && typeof v.name === "string" && v.name.trim() !== "") {
+      out.push(v.name.trim());
+    }
   };
   if (Array.isArray(trip.destinations)) trip.destinations.forEach(push);
   if (typeof trip.destination === "string") push(trip.destination);

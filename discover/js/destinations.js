@@ -26,6 +26,8 @@ import {
   openDestinationModal,
   updateModalFavorite,
 } from "../components/destination-modal.js";
+import { createReviewModal } from "../../js/components/review-modal.js";
+import { initSubpageNav } from "../../js/services/subpage-nav.js";
 import { initDiscoverEvents, showStatus } from "./discover-events.js";
 
 const state = {
@@ -171,13 +173,24 @@ function applyStoredTheme() {
 }
 
 function init() {
+  initSubpageNav();
   applyStoredTheme();
   const check = validateDestinations(destinations);
   if (!check.valid) console.warn("Destination data issues:", check.errors);
 
   const { searchMount, panelMount } = els();
 
-  searchApi = createSearchBar({});
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const initialQuery = params.get("q");
+    if (initialQuery) {
+      state.query = initialQuery;
+    }
+  } catch {
+    /* ignore */
+  }
+
+  searchApi = createSearchBar({ value: state.query });
   searchMount?.appendChild(searchApi.element);
 
   panelRoot = createFilterPanel({ destinations, filters: state.filters });
@@ -185,6 +198,29 @@ function init() {
 
   modal = createDestinationModal();
   document.body.appendChild(modal);
+
+  const reviewModal = createReviewModal({
+    onSubmit: () => {
+      showStatus(document, "Your review has been published! Thank you for sharing your experience.");
+      if (state.selectedDestinationId) {
+        const raw = getDestinationById(destinations, state.selectedDestinationId);
+        const details = prepareDestinationDetails(raw);
+        if (details) {
+          const favIds = new Set(getFavoriteIds());
+          openDestinationModal(modal, details, favIds.has(state.selectedDestinationId));
+        }
+      }
+    },
+  });
+  document.body.appendChild(reviewModal.element);
+
+  document.addEventListener("click", (e) => {
+    const rateBtn = e.target.closest('[data-action="rate-destination"]');
+    if (rateBtn) {
+      const destName = rateBtn.dataset.destinationName || "";
+      reviewModal.open({ destination: destName });
+    }
+  });
 
   renderFeatured();
   renderAll();
@@ -233,12 +269,11 @@ function init() {
     },
     onPlanTrip: (id) => {
       const raw = id ? getDestinationById(destinations, id) : null;
-      showStatus(
-        document,
-        raw
-          ? `Trip creation for “${raw.name}” is not connected yet — this demo does not create trips.`
-          : "Trip creation is not connected yet — this demo does not create trips."
-      );
+      if (raw) {
+        window.location.href = `../trips/trips.html?dest=${encodeURIComponent(raw.name)}`;
+      } else {
+        window.location.href = `../trips/trips.html`;
+      }
     },
     onToggleSavedOnly: () => {
       state.favoritesOnly = !state.favoritesOnly;
